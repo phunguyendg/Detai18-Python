@@ -1,0 +1,142 @@
+[
+  {
+    "slot_id": "A1",
+    "status": "occupied",
+    "current_plate": "59A1-123.45",
+    "note": "",
+    "entry_time": "2026-10-17T21:34:24.941607"
+  },
+  {
+    "slot_id": "A2",
+    "status": "occupied",
+    "current_plate": "51F-123.45",
+    "note": "",
+    "entry_time": "2026-10-17T21:34:41.309330"
+  },
+  {
+    "slot_id": "A3",
+    "status": "maintenance",
+    "current_plate": "",
+    "note": "hư gạch",
+    "entry_time": null
+  },
+  {
+    "slot_id": "A4",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "A5",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "A6",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "A7",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "A8",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "A9",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "A10",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B1",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B2",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B3",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B4",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B5",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B6",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B7",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B8",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B9",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  },
+  {
+    "slot_id": "B10",
+    "status": "empty",
+    "current_plate": "",
+    "note": "",
+    "entry_time": null
+  }
+]

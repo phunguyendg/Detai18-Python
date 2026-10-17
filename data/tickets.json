@@ -1,0 +1,38 @@
+[
+  {
+    "ticket_id": "T-261017-QZKS",
+    "plate": "59A1-123.45",
+    "vehicle_type": "motorbike",
+    "slot_id": "A1",
+    "entry_time": "2026-10-17T21:33:43.237894",
+    "exit_time": "2026-10-17T21:34:14.066244",
+    "fee": 0,
+    "status": "closed",
+    "is_monthly": false,
+    "payment_id": ""
+  },
+  {
+    "ticket_id": "T-261017-MHDT",
+    "plate": "59A1-123.45",
+    "vehicle_type": "car",
+    "slot_id": "A1",
+    "entry_time": "2026-10-17T21:34:24.941607",
+    "exit_time": "2026-10-17T21:34:33.683417",
+    "fee": 0,
+    "status": "parked",
+    "is_monthly": false,
+    "payment_id": ""
+  },
+  {
+    "ticket_id": "T-261017-KNIB",
+    "plate": "51F-123.45",
+    "vehicle_type": "car",
+    "slot_id": "A2",
+    "entry_time": "2026-10-17T21:34:41.309330",
+    "exit_time": null,
+    "fee": 0,
+    "status": "parked",
+    "is_monthly": false,
+    "payment_id": ""
+  }
+]
