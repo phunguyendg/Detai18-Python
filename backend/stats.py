@@ -35,7 +35,7 @@ class StatsService:
         return {"total_slots": total, "empty": empty, "occupied": occupied, "maintenance": maint,
                 "occupancy_rate": rate, "vehicles_in": len(today_tickets),
                 "vehicles_out": sum(1 for t in today_tickets if t.status != TICKET_PARKED),
-                "revenue": 0, "hourly_counts": hourly}
+                "revenue": sum(p.amount for p in self.payments.get_transactions({"date_from": today, "date_to": today})), "hourly_counts": hourly}
 
     def export_shift_report(self, path: str) -> str:
         path = Path(path)
@@ -44,14 +44,22 @@ class StatsService:
             w = csv.writer(f)
             w.writerow(["BÁO CÁO CA TRỰC", PARKING_NAME])
             w.writerow(["Ngày xuất", datetime.now().strftime("%d/%m/%Y %H:%M")])
+            s = self.get_statistics()
+            for key, value in s.items():
+                if key != "hourly_counts": w.writerow([key, value])
+            w.writerow([])
+            w.writerow(["Mã thanh toán", "Ngày", "Loại", "Biển số", "Số tiền", "Phương thức", "Thu ngân"])
+            for p in self.payments.get_transactions():
+                w.writerow([p.payment_id, p.created_at.strftime("%d/%m/%Y %H:%M:%S"), p.kind, p.plate, p.amount, p.method, p.cashier])
         return str(path)
 
     def backup_data(self, path: str) -> str:
         path = Path(path)
         bundle = {"_backup_at": datetime.now().isoformat(), "files": {}}
-        for name in ["parking_slots.json", "tickets.json", "monthly_tickets.json"]:
+        for name in ["parking_slots.json", "tickets.json", "monthly_tickets.json", "payments.json", "shifts.json", "accounts.json", "audit.json", "customer_data.json"]:
             fp = DATA_DIR / name
             if fp.exists(): 
                 bundle["files"][name] = json.loads(fp.read_text(encoding="utf-8"))
+        path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(json.dumps(bundle, ensure_ascii=False, indent=2), encoding="utf-8")
         return str(path)

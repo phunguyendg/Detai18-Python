@@ -8,20 +8,11 @@
     "active": true,
     "must_change_password": false
   },
-  "staff": {
-    "username": "staff",
-    "password": "staff123",
-    "full_name": "Nhân viên",
-    "phone": "0900000001",
-    "role": "staff",
-    "active": true,
-    "must_change_password": false
-  },
-  "khach01": {
-    "username": "khach01",
-    "password": "khach123",
-    "full_name": "Khách hàng",
-    "phone": "0900000002",
+  "hung": {
+    "username": "hung",
+    "password": "123456hung",
+    "full_name": "hung",
+    "phone": "0392926544",
     "role": "user",
     "active": true,
     "must_change_password": false

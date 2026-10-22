@@ -22,7 +22,15 @@ class ParkingLot:
         if file.exists():
             try:
                 data = json.loads(file.read_text(encoding="utf-8"))
-                self.slots = [ParkingSlot(**d) for d in data]
+                self.slots = []
+                for d in data:
+                    et = d.get("entry_time")
+                    if et and isinstance(et, str):
+                        try:
+                            d["entry_time"] = datetime.fromisoformat(et)
+                        except Exception:
+                            d["entry_time"] = None
+                    self.slots.append(ParkingSlot(**d))
                 return
             except Exception:
                 pass
@@ -38,7 +46,8 @@ class ParkingLot:
         file = DATA_DIR / "parking_slots.json"
         file.parent.mkdir(parents=True, exist_ok=True)
         data = [{"slot_id": s.slot_id, "status": s.status, "current_plate": s.current_plate, 
-                 "note": s.note, "entry_time": s.entry_time.isoformat() if s.entry_time else None} for s in self.slots]
+                 "note": s.note, 
+                 "entry_time": s.entry_time.isoformat() if isinstance(s.entry_time, datetime) else (s.entry_time if s.entry_time else None)} for s in self.slots]
         file.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
     def get_all_slots(self) -> list[ParkingSlot]:
@@ -71,6 +80,7 @@ class ParkingManager:
         self.lot = parking_lot
         self.tickets: list[ParkingTicket] = []
         self.prices = DEFAULT_PRICES.copy()
+        self.load_prices()
         self.load_tickets()
         
     def get_all_slots(self):
@@ -98,6 +108,7 @@ class ParkingManager:
 
     def save_tickets(self):
         file = DATA_DIR / "tickets.json"
+        file.parent.mkdir(parents=True, exist_ok=True)
         data = []
         for t in self.tickets:
             d = t.__dict__.copy()
@@ -106,11 +117,37 @@ class ParkingManager:
             data.append(d)
         file.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    def load_prices(self):
+        file = DATA_DIR / "prices.json"
+        if file.exists():
+            try:
+                data = json.loads(file.read_text(encoding="utf-8"))
+                for key in ("hourly", "free_minutes", "lost_ticket", "monthly", "monthly_discount"):
+                    if key not in data: raise ValueError("Thiếu khóa bảng giá")
+                self.prices = data
+                self.prices["monthly_discount"] = {int(k): v for k, v in self.prices["monthly_discount"].items()}
+            except (ValueError, TypeError, KeyError):
+                self.prices = DEFAULT_PRICES.copy()
+        else:
+            self.prices = DEFAULT_PRICES.copy()
+            self.save_prices()
+
+    def save_prices(self):
+        file = DATA_DIR / "prices.json"
+        file.parent.mkdir(parents=True, exist_ok=True)
+        file.write_text(json.dumps(self.prices, ensure_ascii=False, indent=2), encoding="utf-8")
+
     def get_prices(self) -> dict:
         return self.prices
 
     def set_prices(self, new_prices: dict):
+        for kind in ("hourly", "lost_ticket", "monthly"):
+            if kind not in new_prices or any(int(v) < 0 for v in new_prices[kind].values()):
+                raise ParkingError("Bảng giá không hợp lệ.")
+        if int(new_prices.get("free_minutes", -1)) < 0:
+            raise ParkingError("Số phút miễn phí không hợp lệ.")
         self.prices = new_prices
+        self.save_prices()
 
     def _generate_ticket_id(self) -> str:
         """Sinh mã vé tự động, VD: T-231015-ABCD"""

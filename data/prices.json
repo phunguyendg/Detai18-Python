@@ -1,0 +1,21 @@
+{
+  "hourly": {
+    "motorbike": 3000,
+    "car": 10000
+  },
+  "free_minutes": 15,
+  "lost_ticket": {
+    "motorbike": 50000,
+    "car": 100000
+  },
+  "monthly": {
+    "motorbike": 120000,
+    "car": 1200000
+  },
+  "monthly_discount": {
+    "1": 0,
+    "3": 5,
+    "6": 10,
+    "12": 15
+  }
+}

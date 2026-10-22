@@ -1,0 +1,25 @@
+{
+  "accounts": [
+    {
+      "username": "admin",
+      "full_name": "Quản trị viên",
+      "phone": "",
+      "role": "admin",
+      "salt": "55e37dab90abf197cd92cd9fbe5c7e05",
+      "pw_hash": "a9c6c7b43d6c222fb88f2df15886c09f917796b17c1aee671443931c3b933342",
+      "active": true,
+      "failed": 0,
+      "locked_until": null,
+      "must_change": false,
+      "created_at": {
+        "__type__": "datetime",
+        "value": "2026-10-19T12:40:47.656565"
+      },
+      "created_by": "system",
+      "last_login": {
+        "__type__": "datetime",
+        "value": "2026-10-19T12:41:46.398194"
+      }
+    },
+  ]
+}

@@ -2,22 +2,22 @@
   {
     "slot_id": "A1",
     "status": "occupied",
-    "current_plate": "59A1-123.45",
+    "current_plate": "78AH-12233",
     "note": "",
-    "entry_time": "2026-10-17T21:34:24.941607"
+    "entry_time": "2026-10-19T13:57:52.466485"
   },
   {
     "slot_id": "A2",
-    "status": "occupied",
-    "current_plate": "51F-123.45",
+    "status": "empty",
+    "current_plate": "",
     "note": "",
-    "entry_time": "2026-10-17T21:34:41.309330"
+    "entry_time": null
   },
   {
     "slot_id": "A3",
-    "status": "maintenance",
+    "status": "empty",
     "current_plate": "",
-    "note": "hư gạch",
+    "note": "",
     "entry_time": null
   },
   {

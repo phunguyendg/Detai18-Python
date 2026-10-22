@@ -33,9 +33,9 @@ class AuthService:
         self._current_user = None
         self.load()
 
+    
     def load(self):
         if not self.FILE.exists():
-            # Tạo tài khoản mẫu
             self._accounts = {
                 "admin": Account("admin", "admin123", "Quản trị viên", "0900000000", ROLE_ADMIN),
                 "staff": Account("staff", "staff123", "Nhân viên", "0900000001", ROLE_STAFF),
@@ -43,10 +43,35 @@ class AuthService:
             }
             self.save()
             return
+
         try:
             raw = json.loads(self.FILE.read_text(encoding="utf-8"))
-            self._accounts = {k: Account(**v) for k, v in raw.items()}
-        except Exception: pass
+
+            if isinstance(raw, list):
+                self._accounts = {
+                    item["username"]: Account(**item)
+                    for item in raw
+                }
+            elif isinstance(raw, dict):
+                self._accounts = {
+                    username: Account(**data)
+                    for username, data in raw.items()
+                }
+            else:
+                raise ValueError("Định dạng accounts.json không hợp lệ.")
+
+            if "admin" not in self._accounts:
+                self._accounts["admin"] = Account(
+                    "admin", "admin123", "Quản trị viên",
+                    "0900000000", ROLE_ADMIN
+                )
+                self.save()
+
+        except (ValueError, TypeError, KeyError) as e:
+            raise RuntimeError(
+                f"Không thể đọc tài khoản trong {self.FILE}: {e}"
+            ) from e
+
 
     def save(self):
         self.FILE.parent.mkdir(parents=True, exist_ok=True)
@@ -99,4 +124,6 @@ class AuthService:
             self.save()
 
     def unlock_login(self, username):
-        pass # Bỏ qua logic khóa tạm thời để đơn giản hóa
+        if username not in self._accounts:
+            raise AuthError("Không tìm thấy tài khoản.")
+        return True

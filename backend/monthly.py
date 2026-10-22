@@ -141,27 +141,28 @@ class MonthlyManager:
 
     def purchase_monthly_ticket(self, plate, owner, phone, vehicle_type, months,
                                 start_date, method, received, reference):
+        plate = plate.strip().upper()
+        if not plate or not owner.strip() or not phone.strip():
+            raise ParkingError("Biển số, tên chủ xe và số điện thoại không được để trống.")
+        q = self.quote_monthly(plate, vehicle_type, int(months), start_date)
+        old = self._tickets.get(plate)
+        # Không ghi vé mới khi thanh toán chưa thành công.
         if self._payments is None:
-            # Nếu chưa có dịch vụ thanh toán (chờ Hưng), tạo một object giả để test
-            class FakePayment:
-                payment_id = "PAY_MOCK_001"
-            payment = FakePayment()
-        else:
-            q = self.quote_monthly(plate, vehicle_type, months, start_date)
-            payment = self._payments.create_payment(
-                kind="monthly", plate=plate.upper(), amount=q["total"],
-                method=method, received=received, reference=reference,
-                description=f"Vé tháng {months} tháng ({q['start_date']} → {q['end_date']})",
-            )
-            start_date = q["start_date"]
-            end_date = q["end_date"]
-
-        # Ghi nhận vé
-        q = self.quote_monthly(plate, vehicle_type, months, start_date) # Gọi lại để chắc chắn
-        ticket = MonthlyTicket(plate.upper(), owner.strip(), phone.strip(), vehicle_type,
+            raise ParkingError("Chưa cấu hình dịch vụ thanh toán, không thể mua vé tháng.")
+        payment = self._payments.create_payment(
+            kind="monthly", plate=plate, amount=q["total"], method=method,
+            received=received, reference=reference,
+            description=f"Vé tháng {months} tháng ({q['start_date']} → {q['end_date']})")
+        ticket = MonthlyTicket(plate, owner.strip(), phone.strip(), vehicle_type,
                                q["start_date"], q["end_date"])
-        self._tickets[ticket.plate] = ticket
-        self.save()
+        self._tickets[plate] = ticket
+        try:
+            self.save()
+        except Exception:
+            # Tránh để giao dịch dở dang trong bộ nhớ; lịch sử thanh toán vẫn được lưu để đối soát.
+            if old is not None: self._tickets[plate] = old
+            else: self._tickets.pop(plate, None)
+            raise
         return ticket, payment
 
     @staticmethod

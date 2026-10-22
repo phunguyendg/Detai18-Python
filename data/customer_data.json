@@ -1,0 +1,26 @@
+{
+  "vehicles": [
+    {
+      "username": "hung",
+      "plate": "78AH-123344",
+      "vehicle_type": "motorbike",
+      "status": "verified",
+      "created_at": "2026-10-19T13:56:37.814654"
+    },
+    {
+      "username": "hung",
+      "plate": "51A-999.88",
+      "vehicle_type": "car",
+      "status": "verified",
+      "created_at": "2026-10-21T06:25:11.004493"
+    },
+    {
+      "username": "hung",
+      "plate": "59K1-777.66",
+      "vehicle_type": "motorbike",
+      "status": "pending",
+      "created_at": "2026-10-21T06:25:11.005812"
+    }
+  ],
+  "requests": []
+}

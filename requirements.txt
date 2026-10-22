@@ -1,0 +1,2 @@
+# GUI chỉ dùng thư viện chuẩn (tkinter đi kèm Python). Không cần cài thêm gói nào.
+# Linux: sudo apt install python3-tk

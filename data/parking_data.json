@@ -1,0 +1,187 @@
+{
+  "prices": {
+    "hourly": {
+      "motorbike": 3000,
+      "car": 10000
+    },
+    "free_minutes": 15,
+    "lost_ticket": {
+      "motorbike": 50000,
+      "car": 100000
+    },
+    "monthly": {
+      "motorbike": 120000,
+      "car": 1200000
+    },
+    "monthly_discount": {
+      "1": 0,
+      "3": 5,
+      "6": 10,
+      "12": 15
+    }
+  },
+  "slots": [
+    {
+      "slot_id": "A1",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A2",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A3",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A4",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A5",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A6",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A7",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A8",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A9",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "A10",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B1",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B2",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B3",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B4",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B5",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B6",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B7",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B8",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B9",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    },
+    {
+      "slot_id": "B10",
+      "status": "empty",
+      "current_plate": "",
+      "entry_time": null,
+      "ticket_id": "",
+      "note": ""
+    }
+  ],
+  "tickets": [],
+  "monthly_subscriptions": []
+}
