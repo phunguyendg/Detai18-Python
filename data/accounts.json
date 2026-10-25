@@ -8,10 +8,19 @@
     "active": true,
     "must_change_password": false
   },
+  "nhanvien": {
+    "username": "nhanvien",
+    "password": "nhanvien123",
+    "full_name": "Nguyễn Văn Nhân Viên",
+    "phone": "0912345678",
+    "role": "staff",
+    "active": true,
+    "must_change_password": false
+  },
   "hung": {
     "username": "hung",
     "password": "123456hung",
-    "full_name": "hung",
+    "full_name": "Trần Gia Hưng",
     "phone": "0392926544",
     "role": "user",
     "active": true,

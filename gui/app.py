@@ -21,10 +21,6 @@ from gui.utils import format_money
 from gui.parking_map import ParkingMapCanvas
 from gui.stats_tab import StatsTab
 from gui.vietqr_tab import VietQRTab
-try:
-    from gui.weather_tab import WeatherTab
-except ImportError:
-    WeatherTab = VietQRTab
 from gui.accounts_tab import AccountsTab
 from gui.audit_tab import AuditTab
 from gui.customer_portal import CustomerStatusTab, MyVehiclesTab, MyMonthlyTab, MyHistoryTab
@@ -32,14 +28,15 @@ from datetime import date
 
 
 class MainWindow(tk.Tk):
-    def __init__(self, manager, monthly, stats, auth, payments, customers, audit, vietqr=None, weather=None):
+    def __init__(self, manager, monthly, stats, auth, payments, customers, audit, vietqr=None):
         super().__init__()
         self.manager, self.monthly, self.stats, self.auth, self.payments = manager, monthly, stats, auth, payments
         self.customers, self.audit = customers, audit
-        self.vietqr = vietqr if vietqr is not None else weather
-        self.weather = self.vietqr  # Tương thích ngược
+        for s in (self.manager, self.monthly, self.auth, self.payments, self.customers):
+            if s is not None:
+                s.audit = self.audit
+        self.vietqr = vietqr
         self.user = None
-        self._last_weather_alert = None
         self._tab_widgets, self._reload_fns = [], []
         self.title(APP_TITLE)
         self.minsize(*MIN_WINDOW_SIZE)
@@ -88,13 +85,14 @@ class MainWindow(tk.Tk):
         add(self.overview, "Tổng quan", self._reload_overview)
         self.history_tab = HistoryTab(self.notebook, self.manager)
         self.monthly_tab = MonthlyTab(self.notebook, self.monthly, self.refresh_all, manager=self.manager,
-                                      payments=self.payments, get_cashier=self.get_cashier, customers=self.customers)
+                                      payments=self.payments, get_cashier=self.get_cashier, customers=self.customers,
+                                      on_switch_payment=self.switch_to_payment)
         self.payments_tab = PaymentsTab(self.notebook, self.payments, self.refresh_all, self.get_cashier,
                                         on_shift_closed=self._on_shift_closed)
         self.stats_tab = StatsTab(self.notebook, self.stats)
         add(self.history_tab, "Lịch sử", self.history_tab.reload)
         add(self.monthly_tab, "Vé tháng", self.monthly_tab.reload)
-        add(self.payments_tab, "Thanh toán & Ca", self.payments_tab.reload)
+        add(self.payments_tab, "Ca trực", self.payments_tab.reload)
         add(self.stats_tab, "Thống kê & Báo cáo", self.stats_tab.reload)
         self._add_vietqr_tab(add)
         if self.user.role == ROLE_ADMIN:                             
@@ -103,25 +101,29 @@ class MainWindow(tk.Tk):
             add(self.accounts_tab, "Nhân sự & Tài khoản", self.accounts_tab.reload)
             add(self.audit_tab, "Nhật ký hoạt động", self.audit_tab.reload)
 
+    def switch_to_payment(self, prefill=None):
+        """Chuyển ngay sang tab Thu ngân & Thanh toán và tải dữ liệu tương ứng."""
+        if hasattr(self, 'vietqr_tab') and self.vietqr_tab:
+            self.notebook.select(self.vietqr_tab)
+            if prefill and prefill.get("mode") == "monthly":
+                self.vietqr_tab.setup_monthly_payment(prefill)
+            elif prefill and prefill.get("plate"):
+                self.vietqr_tab.select_plate(prefill["plate"])
+
     def _add_vietqr_tab(self, add):
-        """Tab Thanh toán VietQR dành cho MỌI vai trò (chuẩn NAPAS 247 / EMVCo)."""
+        """Tab Thu ngân & Thanh toán đa phương thức (chuẩn NAPAS 247 / EMVCo)."""
         self.vietqr_tab = VietQRTab(self.notebook, self.vietqr, on_update=self._on_vietqr_update,
                                     manager=self.manager, payments=self.payments,
                                     monthly=self.monthly, get_cashier=self.get_cashier,
-                                    on_data_changed=self.refresh_all)
-        add(self.vietqr_tab, "Thanh toán VietQR", self.vietqr_tab.reload)
+                                    on_data_changed=self.refresh_all,
+                                    customers=self.customers, user_role=self.user.role)
+        self.vietqr_tab.audit = self.audit
+        add(self.vietqr_tab, "Thu ngân & Thanh toán", self.vietqr_tab.reload)
         self.vietqr_tab.start()
-
-    def _add_weather_tab(self, add):
-        """Hàm tương thích ngược với mã cũ."""
-        self._add_vietqr_tab(add)
 
     def _on_vietqr_update(self, summary, advice=None):
         """Cập nhật thông tin VietQR trên thanh header."""
-        self.var_weather.set(summary)
-
-    def _on_weather_update(self, summary, advice=None):
-        self._on_vietqr_update(summary, advice)                                                       
+        self.var_vietqr.set(summary)                                                   
 
     def _reload_overview(self):
         self.map_canvas.render(self.manager.get_all_slots())
@@ -201,12 +203,12 @@ class MainWindow(tk.Tk):
         self.lbl_toast.grid(row=0, column=2)
         self.var_user = tk.StringVar()
         self.var_clock = tk.StringVar()
-        self.var_weather = tk.StringVar()
+        self.var_vietqr = tk.StringVar()
         right = tk.Frame(bar, bg=COLOR_HEADER)
         right.grid(row=0, column=3, padx=14, sticky="e")
         tk.Label(right, textvariable=self.var_user, bg="#1D4468", fg="white", font=FONT_BOLD,
                  padx=10, pady=3).pack(anchor="e")
-        tk.Label(right, textvariable=self.var_weather, bg=COLOR_HEADER, fg="#CFE3FF", font=FONT_SMALL).pack(anchor="e")
+        tk.Label(right, textvariable=self.var_vietqr, bg=COLOR_HEADER, fg="#CFE3FF", font=FONT_SMALL).pack(anchor="e")
         tk.Label(right, textvariable=self.var_clock, bg=COLOR_HEADER, fg="#8FA9C7", font=FONT_SMALL).pack(anchor="e")
         self._toast_job = None
 
@@ -405,6 +407,19 @@ class MainWindow(tk.Tk):
         d = self.stats.get_statistics() if self.user.role in STAFF_ROLES else self.customers.get_public_status()
         text = f"●  Trống: {d.get('empty', 0)}     ●  Đang dùng: {d.get('occupied', 0)}     ●  Bảo trì: {d.get('maintenance', 0)}" \
                f"     ●  Công suất: {d.get('occupancy_rate', 0):.0f}%"
+
+        # Cảnh báo nổi bật cho nhân viên nếu có xe thanh toán online đang chờ mở barie
+        if self.user.role in STAFF_ROLES and self.customers:
+            p_exits = self.customers.get_pending_exits()
+            if p_exits:
+                text = f"🚨 CÓ {len(p_exits)} XE ĐÃ TRẢ ONLINE CHỜ MỞ BARIE (Tab Thu ngân)  |  " + text
+            if hasattr(self, 'vietqr_tab') and self.vietqr_tab:
+                try:
+                    badge = f" 🚨({len(p_exits)})" if p_exits else ""
+                    self.notebook.tab(self.vietqr_tab, text=f"  Thu ngân & Thanh toán{badge}  ")
+                except Exception:
+                    pass
+
         self.var_status.set(text)
 
     def _tick(self):
@@ -446,7 +461,6 @@ class MainWindow(tk.Tk):
         """Hiện hộp thoại đăng nhập; trả về True nếu đăng nhập thành công."""
         self.withdraw()
         self.lbl_toast.config(text="", bg=COLOR_HEADER)                                      
-        self._last_weather_alert = None
         dlg = LoginDialog(self, self.auth)
         dlg.wait_visibility()
         dlg.grab_set()
@@ -454,6 +468,8 @@ class MainWindow(tk.Tk):
         if dlg.user is None:
             return False
         self.user = dlg.user
+        if self.audit:
+            self.audit.set_actor(self.user)
         if self.user.must_change_password:                                                                     
             if not ChangePasswordDialog(self, self.auth, self.user.username, forced=True).show():
                 self.auth.logout()
@@ -483,9 +499,12 @@ class MainWindow(tk.Tk):
             if OpenShiftDialog(self, self.payments, self.get_cashier()).show():
                 self.refresh_all()
         if not msg:
+            p_exits = len(self.customers.get_pending_exits()) if self.customers else 0
             pending = len(self.customers.get_requests("pending")) + len(self.customers.get_pending_vehicles())
             soon = [t for t in self.monthly.get_all_monthly_tickets() if 0 <= (t.end_date - date.today()).days <= EXPIRING_DAYS]
-            if pending:
+            if p_exits:
+                msg = (f"🚨 CÓ {p_exits} XE ĐÃ THANH TOÁN ONLINE ĐANG CHỜ MỞ BARIE - VÀO TAB THU NGÂN ĐỂ XÁC THỰC!", "warn")
+            elif pending:
                 msg = (f"● Có {pending} yêu cầu / xe của khách đang chờ xử lý (tab Vé tháng)", "info")
             elif soon:
                 msg = (f"⚠ Có {len(soon)} vé tháng sắp hết hạn trong {EXPIRING_DAYS} ngày - xem tab Vé tháng", "warn")
@@ -537,7 +556,7 @@ class MainWindow(tk.Tk):
                     "2. Xe vào: nhập biển số, chọn loại xe và chỗ, bấm NHẬN XE.\n"
                     "3. Xe ra: Tính phí, THANH TOÁN (tiền mặt, VietQR, MoMo, ZaloPay, thẻ). Tick 'Khách mất vé' nếu mất vé.\n"
                     "4. Vé tháng: MUA / GIA HẠN; xử lý yêu cầu và xác minh xe của khách.\n"
-                    "5. Cuối ca: Thanh toán & Ca > Chốt ca (đối soát tiền mặt). Mỗi ca chỉ thu bởi thu ngân của ca đó.\n"
+                    "5. Cuối ca: Ca trực > Chốt ca (đối soát tiền mặt). Mỗi ca chỉ thu bởi thu ngân của ca đó.\n"
                     "6. Quản trị: tab Nhân sự & Tài khoản, Nhật ký hoạt động; chuột phải ô để đặt bảo trì; Tệp > Bảng giá, Sao lưu.\n"
                     "7. F5: làm mới dữ liệu.")
         messagebox.showinfo("Hướng dẫn sử dụng", text)

@@ -58,12 +58,12 @@ mất vé cộng thêm `lost_ticket[vt]` (kể cả vé tháng).
 **Quyền kiểm tra ở BACKEND** (GUI chỉ ẩn/hiện): mỗi hàm gọi `audit.require(*roles)`, sai quyền ném `PermissionDeniedError`.
 Người thao tác lấy từ `audit.actor` (được set khi `auth.login`, xóa khi `auth.logout`).
 
-## AuthService (Vĩ hoặc Phú)
+## AuthService 
 `login(u, p) -> User(username, role, full_name, must_change_password)`; `logout()`; `register(u, p, full_name, phone)` (luôn là `user`);
 `change_password(u, old, new)`; `get_profile(u)`; admin: `list_accounts(role, kw)`, `create_staff(u, name, phone, temp_pw)`,
 `set_active(u, flag)`, `reset_password(u, temp_pw)`, `unlock_login(u)`.
 Điều kiện: MK >= 8 ký tự có chữ + số; **PBKDF2-HMAC-SHA256 + salt riêng từng người** (demo 200k vòng, triển khai thật >= 600k);
-sai MK 5 lần -> khóa 5 phút; thông báo sai đăng nhập **chung chung** (không lộ tài khoản có tồn tại); không tự khóa mình;
+thông báo sai đăng nhập **chung chung** (không lộ tài khoản có tồn tại); không tự khóa mình;
 không khóa admin cuối cùng; lỗi đăng nhập/khóa đều ghi nhật ký. `users.json` lưu `salt`, `pw_hash` (không lưu MK gốc).
 
 ## AuditLog
@@ -109,4 +109,4 @@ Quản trị chốt thay ca người khác thì không đăng xuất.
 | `get_recent_transactions()` | Danh sách các giao dịch mã QR đã tạo phục vụ đối soát |
 | `load_cache()`, `save_transaction(txn)` | Đọc và ghi an toàn nhật ký giao dịch qua file tạm và thay thế nguyên tử |
 
-Lỗi: `VietQRError` (thông báo tiếng Việt). File dữ liệu lưu trữ: `data/vietqr.json`. Tương thích ngược: `WeatherError = VietQRError`.
+Lỗi: `VietQRError` (thông báo tiếng Việt). File dữ liệu lưu trữ: `data/vietqr.json`.

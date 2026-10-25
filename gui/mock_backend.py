@@ -1,8 +1,6 @@
-"""BACKEND GIẢ để phát triển và chạy thử GUI khi backend thật chưa xong.
+"""BACKEND GIẢ để phát triển và chạy thử GUI.
 
 Có CÙNG tên hàm / tham số / giá trị trả về với hợp đồng giao tiếp (xem CONTRACT.md).
-Khi ghép: chỉ cần đổi create_mock_backend() trong main.py sang khởi tạo backend thật.
-Dữ liệu chỉ nằm trong bộ nhớ (tắt chương trình là mất).
 """
 import calendar
 import copy

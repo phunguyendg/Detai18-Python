@@ -137,19 +137,3 @@ VIETQR_CACHE = DATA_DIR / "vietqr.json"
 VIETQR_TIMEOUT = 8
 VIETQR_TEMPLATE = "compact2"
 VIETQR_SOURCE = "VietQR.io (Napas 247)"
-
-# Các hằng số cũ thời tiết (giữ tương thích)
-WEATHER_API_URL = "https://api.open-meteo.com/v1/forecast"
-GEOCODE_API_URL = "https://geocoding-api.open-meteo.com/v1/search"
-WEATHER_CACHE = DATA_DIR / "weather.json"
-WEATHER_TIMEOUT = 8
-WEATHER_REFRESH_MINUTES = 30
-WEATHER_TIMEZONE = "Asia/Bangkok"
-WEATHER_FORECAST_DAYS = 5
-WEATHER_SOURCE = "Open-Meteo.com (CC BY 4.0)"
-WEATHER_LOCATIONS = [
-    {"name": "Vĩnh Yên, Phú Thọ", "lat": 21.3089, "lon": 105.6049},
-    {"name": "Hà Nội", "lat": 21.0285, "lon": 105.8542},
-    {"name": "TP. Hồ Chí Minh", "lat": 10.8231, "lon": 106.6297},
-    {"name": "Đà Nẵng", "lat": 16.0544, "lon": 108.2022},
-]

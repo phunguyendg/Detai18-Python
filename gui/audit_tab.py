@@ -66,6 +66,11 @@ class AuditTab(ttk.Frame):
         self.reload()
 
     def reload(self):
+        if hasattr(self.audit, 'load'):
+            try:
+                self.audit.load()
+            except Exception:
+                pass
         f = {}
         try:
             if self.var_actor.get().strip():

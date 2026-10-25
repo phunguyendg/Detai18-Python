@@ -18,28 +18,28 @@ from backend.audit import AuditService
 
 
 def main():
+    audit = AuditService()
     parking_lot = ParkingLot()
-    manager = ParkingManager(parking_lot)
+    manager = ParkingManager(parking_lot, audit=audit)
 
-    payments = PaymentService()
-    auth = AuthService()
+    payments = PaymentService(audit=audit)
+    auth = AuthService(audit=audit)
 
-    monthly = MonthlyManager(prices_provider=manager.get_prices, payment_service=payments)
+    monthly = MonthlyManager(prices_provider=manager.get_prices, payment_service=payments, audit=audit)
 
     customers = CustomerService(
         manager=manager,
         monthly=monthly,
         auth=auth,
-        payments=payments)
-
-    audit = AuditService()
+        payments=payments,
+        audit=audit)
 
     stats = StatsService(
         parking_lot=parking_lot,
         tickets_provider=manager,
         payments_service=payments)
 
-    # Khởi tạo dịch vụ tạo mã QR thanh toán ngân hàng chuẩn VietQR (thay thế dịch vụ thời tiết cũ)
+    # Khởi tạo dịch vụ tạo mã QR thanh toán ngân hàng chuẩn VietQR
     vietqr = VietQRService(
         cache_path=VIETQR_CACHE,
         api_url=VIETQR_API_URL,

@@ -76,8 +76,9 @@ class ParkingLot:
 
 
 class ParkingManager:
-    def __init__(self, parking_lot: ParkingLot):
+    def __init__(self, parking_lot: ParkingLot, audit=None):
         self.lot = parking_lot
+        self.audit = audit
         self.tickets: list[ParkingTicket] = []
         self.prices = DEFAULT_PRICES.copy()
         self.load_prices()
@@ -90,7 +91,10 @@ class ParkingManager:
         return self.lot.get_slot(slot_id)
 
     def set_slot_maintenance(self, slot_id: str, is_maintenance: bool, reason: str = ""):
-        return self.lot.set_slot_maintenance(slot_id, is_maintenance, reason)
+        res = self.lot.set_slot_maintenance(slot_id, is_maintenance, reason)
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("maintenance", f"Ô {slot_id}: " + (f"Đặt bảo trì - {reason.strip()}" if is_maintenance else "Bỏ bảo trì (Mở lại)"))
+        return res
 
     def load_tickets(self):
         file = DATA_DIR / "tickets.json"
@@ -148,6 +152,8 @@ class ParkingManager:
             raise ParkingError("Số phút miễn phí không hợp lệ.")
         self.prices = new_prices
         self.save_prices()
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("price_change", "Cập nhật bảng giá giữ xe")
 
     def _generate_ticket_id(self) -> str:
         """Sinh mã vé tự động, VD: T-231015-ABCD"""
@@ -192,6 +198,11 @@ class ParkingManager:
 
         self.save_tickets()
         self.lot.save_slots()
+
+        if hasattr(self, 'audit') and self.audit:
+            v_name = "Ô tô" if vehicle_type == "car" else "Xe máy"
+            self.audit.log("vehicle_entry", f"Xe {plate} ({v_name}) vào ô {slot.slot_id} - Mã vé: {ticket.ticket_id}")
+
         return ticket
 
     # ------------------------------------------------------------ XE RA
@@ -238,6 +249,11 @@ class ParkingManager:
 
         self.save_tickets()
         self.lot.save_slots()
+
+        if hasattr(self, 'audit') and self.audit:
+            lost_str = " (Mất vé)" if lost_ticket else ""
+            self.audit.log("vehicle_exit", f"Xe {ticket.plate} ra khỏi ô {ticket.slot_id}, phí {ticket.fee:,.0f} đ{lost_str}")
+
         return ticket
 
     def get_history(self, filters: dict | None = None) -> list[ParkingTicket]:

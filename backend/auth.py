@@ -28,9 +28,10 @@ class Account:
 
 class AuthService:
     FILE = DATA_DIR / "accounts.json"
-    def __init__(self):
+    def __init__(self, audit=None):
         self._accounts = {}
         self._current_user = None
+        self.audit = audit
         self.load()
 
     
@@ -80,24 +81,40 @@ class AuthService:
 
     def login(self, username, password):
         acc = self._accounts.get(username)
-        if not acc or acc.password != password: raise AuthError("Sai tên đăng nhập hoặc mật khẩu.")
-        if not acc.active: raise AuthError("Tài khoản đã bị khóa.")
+        if not acc or acc.password != password:
+            if hasattr(self, 'audit') and self.audit:
+                self.audit.log("login_failed", f"Đăng nhập sai cho tài khoản {username}", actor=username, role=acc.role if acc else "-")
+            raise AuthError("Sai tên đăng nhập hoặc mật khẩu.")
+        if not acc.active:
+            if hasattr(self, 'audit') and self.audit:
+                self.audit.log("login_failed", f"Tài khoản {username} đã bị khóa", actor=username, role=acc.role)
+            raise AuthError("Tài khoản đã bị khóa.")
         self._current_user = acc
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.set_actor(acc)
+            self.audit.log("login", f"Đăng nhập thành công", actor=username, role=acc.role)
         return acc
 
-    def logout(self): self._current_user = None
+    def logout(self):
+        if hasattr(self, 'audit') and self.audit and self._current_user:
+            self.audit.log("logout", f"Đăng xuất khỏi hệ thống", actor=self._current_user.username, role=self._current_user.role)
+        self._current_user = None
     
     def register(self, username, password, full_name, phone):
         if username in self._accounts: raise AuthError("Tên đăng nhập đã tồn tại.")
         if len(password) < MIN_PASSWORD_LEN: raise AuthError("Mật khẩu quá ngắn.")
         self._accounts[username] = Account(username, password, full_name, phone, ROLE_USER)
         self.save()
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("register", f"Khách đăng ký: {username} ({full_name})", actor=username, role=ROLE_USER)
 
     def change_password(self, username, old, new):
         acc = self._accounts.get(username)
         if not acc or acc.password != old: raise AuthError("Mật khẩu cũ không đúng.")
         acc.password = new
         self.save()
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("password_change", f"Đổi mật khẩu cho tài khoản {username}", actor=username, role=acc.role)
 
     def list_accounts(self, role=None, keyword=""):
         res = list(self._accounts.values())
@@ -110,18 +127,30 @@ class AuthService:
         acc = Account(username, password, full_name, phone, ROLE_STAFF, must_change_password=True)
         self._accounts[username] = acc
         self.save()
+        if hasattr(self, 'audit') and self.audit:
+            actor = self._current_user.username if self._current_user else "admin"
+            role = self._current_user.role if self._current_user else ROLE_ADMIN
+            self.audit.log("account_create", f"Tạo nhân viên {username} ({full_name})", actor=actor, role=role)
         return acc
 
     def set_active(self, username, active):
         if username in self._accounts:
             self._accounts[username].active = active
             self.save()
+            if hasattr(self, 'audit') and self.audit:
+                actor = self._current_user.username if self._current_user else "admin"
+                role = self._current_user.role if self._current_user else ROLE_ADMIN
+                self.audit.log("account_lock", f"{'Mở khóa' if active else 'Khóa'} tài khoản {username}", actor=actor, role=role)
 
     def reset_password(self, username, new_pass):
         if username in self._accounts:
             self._accounts[username].password = new_pass
             self._accounts[username].must_change_password = True
             self.save()
+            if hasattr(self, 'audit') and self.audit:
+                actor = self._current_user.username if self._current_user else "admin"
+                role = self._current_user.role if self._current_user else ROLE_ADMIN
+                self.audit.log("password_reset", f"Đặt lại mật khẩu cho {username}", actor=actor, role=role)
 
     def unlock_login(self, username):
         if username not in self._accounts:

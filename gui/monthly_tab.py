@@ -15,12 +15,13 @@ COLUMNS = [("plate", "Biển số", 110), ("owner", "Chủ xe", 150), ("phone", 
 
 
 class MonthlyTab(ttk.Frame):
-    def __init__(self, master, monthly, on_data_changed, manager=None, payments=None, get_cashier=None, customers=None):
+    def __init__(self, master, monthly, on_data_changed, manager=None, payments=None, get_cashier=None, customers=None, on_switch_payment=None):
         super().__init__(master, padding=8)
         self.monthly = monthly
         self.on_data_changed = on_data_changed
         self.manager, self.payments, self.customers = manager, payments, customers
         self.get_cashier = get_cashier or (lambda: "")
+        self.on_switch_payment = on_switch_payment
         self._label_to_key = {v: k for k, v in VEHICLE_TYPES.items()}
         self.var_plate = tk.StringVar()
         self.var_owner = tk.StringVar()
@@ -129,8 +130,16 @@ class MonthlyTab(ttk.Frame):
             self.lbl_price.config(text="Bảng giá / 1 tháng:\n" + " · ".join(
                 f"{VEHICLE_TYPES[k]} {format_money(v)}" for k, v in pr["monthly"].items()))
         if self.customers:
-            n = len(self.customers.get_requests("pending")) + len(self.customers.get_pending_vehicles())
-            self.btn_requests.config(text=f"Yêu cầu & xác minh từ khách ({n})")
+            n_req = len(self.customers.get_requests("pending"))
+            n_veh = len(self.customers.get_pending_vehicles())
+            if n_req > 0 and n_veh > 0:
+                self.btn_requests.config(text=f"Yêu cầu & xác minh ({n_req} vé, {n_veh} xe)")
+            elif n_req > 0:
+                self.btn_requests.config(text=f"Yêu cầu vé tháng ({n_req})")
+            elif n_veh > 0:
+                self.btn_requests.config(text=f"Xe chờ xác minh ({n_veh})")
+            else:
+                self.btn_requests.config(text="Yêu cầu & xác minh từ khách")
         kw = self.var_search.get().strip()
         items = self.monthly.search_monthly_tickets(kw) if kw else self.monthly.get_all_monthly_tickets()
         self.tree.delete(*self.tree.get_children())
@@ -160,7 +169,7 @@ class MonthlyTab(ttk.Frame):
 
     def on_requests(self):
         StaffRequestsDialog(self, self.customers, self.manager, self.monthly, self.payments,
-                            self.on_data_changed, self.get_cashier).show()
+                            self.on_data_changed, self.get_cashier, on_switch_payment=self.on_switch_payment).show()
         self.on_data_changed()
 
     def clear_form(self):

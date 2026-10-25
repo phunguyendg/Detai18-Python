@@ -2,12 +2,12 @@
   {
     "shift_id": "S01",
     "cashier": "admin",
-    "opened_at": "2026-10-21T05:38:02.353771",
+    "opened_at": "2026-10-22T13:06:06.273438",
     "opening_cash": 500000,
     "closed_at": null,
     "counted_cash": null,
     "expected_cash": null,
     "difference": null,
-    "note": ""
+    "note": "Ca trực mở sẵn thuận tiện kiểm thử"
   }
 ]

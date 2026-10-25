@@ -4,7 +4,6 @@
   - admin : quản trị (tạo/khóa tài khoản nhân viên, bảng giá, sao lưu, xem nhật ký, mọi chức năng)
   - staff : nhân viên ca trực (tài khoản do admin cấp; xe vào/ra, thu tiền, bán vé tháng, ca của chính mình)
   - user  : khách hàng (tự đăng ký; chỉ xem xe/vé/hóa đơn của mình, gửi yêu cầu gia hạn)
-Mọi kiểm tra quyền nằm ở BACKEND (audit.require), GUI chỉ ẩn/hiện cho thân thiện.
 """
 import hashlib
 import hmac

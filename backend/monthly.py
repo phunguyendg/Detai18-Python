@@ -46,10 +46,11 @@ class MonthlyTicket:
 class MonthlyManager:
     FILE = DATA_DIR / "monthly_tickets.json"
 
-    def __init__(self, prices_provider=None, payment_service=None):
+    def __init__(self, prices_provider=None, payment_service=None, audit=None):
         self._tickets: dict[str, MonthlyTicket] = {}
         self._prices_provider = prices_provider or (lambda: DEFAULT_PRICES)
         self._payments = payment_service
+        self.audit = audit
         self.load()
 
     def load(self):
@@ -86,10 +87,13 @@ class MonthlyManager:
         if plate in self._tickets:
             raise DuplicateMonthlyTicketError(f"Xe {plate} đã có vé tháng.")
         self._validate(plate, vehicle_type, start_date, end_date)
-        self._tickets[plate] = MonthlyTicket(plate, owner.strip(), phone.strip(),
-                                             vehicle_type, start_date, end_date)
+        ticket = MonthlyTicket(plate, owner.strip(), phone.strip(),
+                               vehicle_type, start_date, end_date)
+        self._tickets[plate] = ticket
         self.save()
-        return self._tickets[plate]
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("monthly_manage", f"Mua/Kích hoạt vé tháng cho xe {plate} (Chủ xe: {owner.strip()}, Hạn đến: {end_date:%d/%m/%Y})")
+        return ticket
 
     def update_monthly_ticket(self, plate, **kwargs):
         plate = plate.upper()
@@ -101,12 +105,16 @@ class MonthlyManager:
                 setattr(t, k, kwargs[k])
         self._validate(t.plate, t.vehicle_type, t.start_date, t.end_date)
         self.save()
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("monthly_manage", f"Cập nhật thông tin vé tháng xe {plate}")
         return t
 
     def remove_monthly_ticket(self, plate) -> bool:
         ok = self._tickets.pop(plate.upper(), None) is not None
         if ok:
             self.save()
+            if hasattr(self, 'audit') and self.audit:
+                self.audit.log("monthly_manage", f"Xóa vé tháng xe {plate.upper()}")
         return ok
 
     def quote_monthly(self, plate, vehicle_type, months, start_date) -> dict:

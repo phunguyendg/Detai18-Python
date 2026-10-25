@@ -1,7 +1,4 @@
 """Điểm nhập khẩu duy nhất cho các exception của backend.
-
-Khi Vĩ viết xong backend/exceptions.py, GUI tự dùng exception thật.
-Nếu chưa có thì dùng bản dự phòng bên dưới (cùng tên) để GUI vẫn chạy.
 """
 try:
     from backend.exceptions import (                
@@ -33,8 +30,3 @@ try:
 except ImportError:
     class VietQRError(Exception):
         """Lỗi tạo mã QR thanh toán hoặc kết nối API VietQR: str(e) là thông báo tiếng Việt."""
-
-try:
-    from services.weather_service import WeatherError
-except ImportError:
-    WeatherError = VietQRError

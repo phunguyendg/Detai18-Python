@@ -1,4 +1,4 @@
-"""Dịch vụ thanh toán trực tuyến qua mã QR ngân hàng chuẩn VietQR (CHỨC NĂNG API của đề tài).
+"""Dịch vụ thanh toán trực tuyến qua mã QR ngân hàng chuẩn VietQR.
 
 - Tiêu chuẩn: Chuẩn VietQR / NAPAS 247 trên nền tảng EMVCo QR code quốc tế.
 - Tích hợp API công khai VietQR (https://api.vietqr.io) với timeout, xử lý mất mạng, HTTP lỗi, JSON hỏng.
@@ -517,12 +517,8 @@ class VietQRService:
     def get_recent_transactions(self) -> list[dict]:
         return self.load_cache().get("transactions", [])
 
-    # Tương thích ngược với các hàm mà weather_service cũ có nếu có code cũ gọi
-    def last_location(self):
-        return {"name": "Hà Nội (VietQR)", "lat": 21.0285, "lon": 105.8542}
 
     def get(self, *args, **kwargs):
-        """Hàm tương thích ngược với WeatherService."""
         return {
             "data": {
                 "current": {"temp": 28, "desc": "VietQR Hoạt động", "kind": "clear", "is_day": True, "feels": 28, "humidity": 65, "wind": 5, "rain_mm": 0},

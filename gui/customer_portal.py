@@ -13,7 +13,13 @@ from gui.payment_dialog import ReceiptDialog
 from gui.utils import format_money, format_dt, format_date, format_duration
 from datetime import date
 
-REQ_LABELS = {"pending": "Chờ xử lý", "done": "Đã hoàn tất", "rejected": "Bị từ chối"}
+REQ_LABELS = {
+    "pending": "Chờ xử lý",
+    "done": "Đã hoàn tất",
+    "approved": "Đã duyệt / Kích hoạt",
+    "rejected": "Bị từ chối",
+    "cancelled": "Đã hủy"
+}
 
 
 def _tree(parent, cols, height=8):
@@ -139,7 +145,7 @@ class CustomerStatusTab(ttk.Frame):
             return
         messagebox.showinfo("Vào bãi thành công",
                             f"Xe {t.plate} đã vào ô {t.slot_id}.\nMã vé: {t.ticket_id}\nGiờ vào: {format_dt(t.entry_time)}\n\n"
-                            "Khi lấy xe, thanh toán tại quầy với nhân viên.")
+                            "📢 LƯU Ý KHI LẤY XE: Quý khách chỉ thanh toán Online (VietQR / Ví điện tử) và chờ nhân viên tại cổng xác nhận mở barie mới được lấy xe rời bãi.")
         self.on_changed()
 
 
@@ -149,9 +155,18 @@ class MyVehiclesTab(ttk.Frame):
         self.customers, self.on_changed = customers, on_changed
         self.var_plate, self.var_type = tk.StringVar(), tk.StringVar(value="motorbike")
         self.columnconfigure(0, weight=1)
-        self.rowconfigure(1, weight=1)
+        self.rowconfigure(2, weight=1)
+
+        # Banner thông báo quy định lấy xe
+        lbl_notice = tk.Label(
+            self,
+            text="📢 THÔNG BÁO QUY ĐỊNH: Khách hàng chỉ thanh toán Online (VietQR / Chuyển khoản) và vui lòng chờ nhân viên tại cổng đối soát mở barie mới được lấy xe rời bãi!",
+            bg="#FFF3CD", fg="#856404", font=FONT_BOLD, padx=10, pady=6, relief="solid", bd=1, justify="left"
+        )
+        lbl_notice.grid(row=0, column=0, sticky="ew", pady=(0, 6))
+
         box = ttk.LabelFrame(self, text=" Thêm xe của tôi ", padding=8)
-        box.grid(row=0, column=0, sticky="ew", pady=(0, 8))
+        box.grid(row=1, column=0, sticky="ew", pady=(0, 8))
         ttk.Label(box, text="Biển số:").grid(row=0, column=0, padx=(0, 4))
         e = ttk.Entry(box, textvariable=self.var_plate, width=16)
         e.grid(row=0, column=1, padx=(0, 12))
@@ -165,7 +180,7 @@ class MyVehiclesTab(ttk.Frame):
         frame, self.tree = _tree(self, [("plate", "Biển số", 110), ("type", "Loại xe", 80), ("verify", "Xác minh", 120),
                                         ("status", "Tình trạng hiện tại", 330), ("fee", "Phí tạm tính", 100),
                                         ("monthly", "Vé tháng", 190)])
-        frame.grid(row=1, column=0, sticky="nsew")
+        frame.grid(row=2, column=0, sticky="nsew")
         self.tree.tag_configure("pending", background=ROW_COLORS["expiring"])
         self.tree.tag_configure("parked", background=ROW_COLORS["parked"])
         ttk.Button(self, text="Gỡ xe đã chọn", command=self.remove).grid(row=2, column=0, sticky="e", pady=(8, 0))
@@ -173,15 +188,24 @@ class MyVehiclesTab(ttk.Frame):
     def reload(self):
         self.tree.delete(*self.tree.get_children())
         today = date.today()
+        pending_plates = {p.get("plate", "") for p in self.customers.get_pending_exits()}
         for v in self.customers.get_my_vehicles():
             is_ver = v.get("status") in ("verified", "approved", "ready") or v.get("verified") is True
             if not is_ver:
                 status, fee, monthly, tag = "Chưa thể xem - chờ xác minh", "—", "—", "pending"
             else:
                 tag = "parked" if v.get("parked", False) else ""
-                status = (f"Đang đỗ ô {v.get('slot_id')} từ {format_dt(v.get('entry_time'))} ({format_duration(v.get('minutes'))})"
-                          if v.get("parked", False) else "Không ở trong bãi")
-                fee = format_money(v.get("fee")) if v.get("parked", False) else "—"
+                is_waiting_barrier = v.get("plate") in pending_plates
+                if is_waiting_barrier:
+                    status = f"🟡 ĐÃ TRẢ ONLINE - CHỜ NHÂN VIÊN MỞ BARIE (Ô {v.get('slot_id')})"
+                    fee = "Đã thanh toán"
+                    tag = "pending"
+                elif v.get("parked", False):
+                    status = f"Đang đỗ ô {v.get('slot_id')} từ {format_dt(v.get('entry_time'))} ({format_duration(v.get('minutes'))})"
+                    fee = format_money(v.get("fee"))
+                else:
+                    status = "Không ở trong bãi"
+                    fee = "—"
                 end = v.get("monthly_end")
                 if not end:
                     monthly = "Chưa có"
@@ -299,8 +323,9 @@ class MyMonthlyTab(ttk.Frame):
                                                                   format_date(t.end_date), state))
         self.t_req.delete(*self.t_req.get_children())
         for r in self.customers.get_my_requests():
-            self.t_req.insert("", "end", values=(r["request_id"], r["plate"], f"{r['months']} tháng",
-                                                 format_dt(r["created_at"]), REQ_LABELS[r["status"]], r["note"] or "—"))
+            st_text = REQ_LABELS.get(r.get("status", "pending"), str(r.get("status", "Chờ xử lý")))
+            self.t_req.insert("", "end", values=(r.get("request_id", ""), r.get("plate", ""), f"{r.get('months', 1)} tháng",
+                                                 format_dt(r.get("created_at")), st_text, r.get("note") or "—"))
         self._estimate()
 
     def submit(self):

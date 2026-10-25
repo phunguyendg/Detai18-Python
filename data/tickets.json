@@ -1,62 +1,62 @@
 [
   {
-    "ticket_id": "T-261019-RYTV",
-    "plate": "78AH-12233",
-    "vehicle_type": "motorbike",
-    "slot_id": "A1",
-    "entry_time": "2026-10-19T13:57:52.466485",
-    "exit_time": null,
-    "fee": 0,
-    "status": "parked",
-    "is_monthly": false,
-    "payment_id": ""
-  },
-  {
-    "ticket_id": "T-261021-IDLE",
+    "ticket_id": "T-261022-CAR1",
     "plate": "59A1-12345",
     "vehicle_type": "car",
-    "slot_id": "A2",
-    "entry_time": "2026-10-21T05:38:02.354465",
-    "exit_time": null,
-    "fee": 0,
-    "status": "parked",
-    "is_monthly": false,
-    "payment_id": ""
-  },
-  {
-    "ticket_id": "T-261021-YSJX",
-    "plate": "59A1-99999",
-    "vehicle_type": "car",
-    "slot_id": "A2",
-    "entry_time": "2026-10-21T05:41:09.470768",
-    "exit_time": "2026-10-21T05:41:15.938519",
-    "fee": 0,
+    "slot_id": "A1",
+    "entry_time": "2026-10-22T14:21:06.273438",
+    "exit_time": "2026-10-25T09:45:02.662081",
+    "fee": 680000,
     "status": "closed",
     "is_monthly": false,
-    "payment_id": ""
+    "payment_id": "PAY-T-261022-CAR1"
   },
   {
-    "ticket_id": "T-261021-GTKC",
-    "plate": "29A-888.88",
-    "vehicle_type": "car",
-    "slot_id": "A2",
-    "entry_time": "2026-10-21T05:49:39.945036",
-    "exit_time": "2026-10-21T05:49:39.945600",
-    "fee": 0,
-    "status": "closed",
-    "is_monthly": false,
-    "payment_id": ""
-  },
-  {
-    "ticket_id": "T-261021-ZWOD",
+    "ticket_id": "T-261022-CAR2",
     "plate": "51A-999.88",
     "vehicle_type": "car",
     "slot_id": "A2",
-    "entry_time": "2026-10-21T06:25:11.005051",
-    "exit_time": "2026-10-21T06:25:11.006077",
+    "entry_time": "2026-10-22T14:51:06.273438",
+    "exit_time": null,
     "fee": 0,
-    "status": "closed",
+    "status": "parked",
     "is_monthly": false,
     "payment_id": ""
+  },
+  {
+    "ticket_id": "T-261022-MOTO1",
+    "plate": "78AH-123.34",
+    "vehicle_type": "motorbike",
+    "slot_id": "B1",
+    "entry_time": "2026-10-22T15:21:06.273438",
+    "exit_time": "2026-10-25T09:45:13.359819",
+    "fee": 0,
+    "status": "closed",
+    "is_monthly": true,
+    "payment_id": ""
+  },
+  {
+    "ticket_id": "T-261022-MOTO2",
+    "plate": "29B1-888.88",
+    "vehicle_type": "motorbike",
+    "slot_id": "B2",
+    "entry_time": "2026-10-22T13:56:06.273438",
+    "exit_time": "2026-10-25T09:45:17.868149",
+    "fee": 204000,
+    "status": "closed",
+    "is_monthly": false,
+    "payment_id": "PAY-T-261022-MOTO2"
+  },
+  {
+    "ticket_id": "T-261022-HIST1",
+    "plate": "30F-654.32",
+    "vehicle_type": "car",
+    "slot_id": "A3",
+    "entry_time": "2026-10-22T12:06:06.273438",
+    "exit_time": "2026-10-22T13:06:06.273438",
+    "fee": 10000,
+    "status": "closed",
+    "is_monthly": false,
+    "payment_id": "PAY-261022-001"
   }
 ]

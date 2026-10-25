@@ -1,17 +1,17 @@
 [
   {
     "slot_id": "A1",
-    "status": "occupied",
-    "current_plate": "78AH-12233",
-    "note": "",
-    "entry_time": "2026-10-19T13:57:52.466485"
-  },
-  {
-    "slot_id": "A2",
     "status": "empty",
     "current_plate": "",
     "note": "",
     "entry_time": null
+  },
+  {
+    "slot_id": "A2",
+    "status": "occupied",
+    "current_plate": "51A-999.88",
+    "note": "",
+    "entry_time": "2026-10-22T14:51:06.273438"
   },
   {
     "slot_id": "A3",
@@ -85,9 +85,9 @@
   },
   {
     "slot_id": "B3",
-    "status": "empty",
+    "status": "maintenance",
     "current_plate": "",
-    "note": "",
+    "note": "Sơn lại vạch kẻ chỗ đỗ xe",
     "entry_time": null
   },
   {

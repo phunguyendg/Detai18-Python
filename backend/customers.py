@@ -6,17 +6,19 @@ from backend.exceptions import ParkingError
 
 class CustomerService:
     FILE=DATA_DIR / 'customer_data.json'
-    def __init__(self, manager, monthly, auth=None, payments=None):
+    def __init__(self, manager, monthly, auth=None, payments=None, audit=None):
         self.manager=manager; self.monthly=monthly; self.auth=auth; self.payments=payments
-        self._vehicles=[]; self._requests=[]; self.load()
+        self.audit=audit
+        self._vehicles=[]; self._requests=[]; self._pending_exits=[]; self.load()
     def load(self):
         try:
             d=json.loads(self.FILE.read_text(encoding='utf-8')) if self.FILE.exists() else {}
             self._vehicles=d.get('vehicles',[]); self._requests=d.get('requests',[])
-        except (ValueError,TypeError): self._vehicles=[]; self._requests=[]
+            self._pending_exits=d.get('pending_exits',[])
+        except (ValueError,TypeError): self._vehicles=[]; self._requests=[]; self._pending_exits=[]
     def save(self):
         self.FILE.parent.mkdir(parents=True,exist_ok=True); tmp=self.FILE.with_suffix('.json.tmp')
-        tmp.write_text(json.dumps({'vehicles':self._vehicles,'requests':self._requests},ensure_ascii=False,indent=2),encoding='utf-8'); tmp.replace(self.FILE)
+        tmp.write_text(json.dumps({'vehicles':self._vehicles,'requests':self._requests,'pending_exits':self._pending_exits},ensure_ascii=False,indent=2),encoding='utf-8'); tmp.replace(self.FILE)
     def _username(self): return getattr(getattr(self.auth,'_current_user',None),'username',None)
     def get_public_status(self):
         slots=self.manager.lot.get_all_slots(); empty=sum(s.status=='empty' for s in slots); occupied=sum(s.status=='occupied' for s in slots)
@@ -126,29 +128,109 @@ class CustomerService:
         return ticket
     def verify_vehicle(self, plate, approved=True):
         for v in self._vehicles:
-            if v['plate']==plate.upper(): v['status']='verified' if approved else 'rejected'; self.save(); return v
+            if v['plate']==plate.upper():
+                v['status']='verified' if approved else 'rejected'
+                self.save()
+                if hasattr(self, 'audit') and self.audit:
+                    self.audit.log("vehicle_verify", f"Xác minh xe {plate.upper()}: {'Đồng ý (Hợp lệ)' if approved else 'Từ chối'}")
+                return v
         raise ParkingError('Không tìm thấy yêu cầu liên kết xe.')
     def unlink_vehicle(self, plate):
         u=self._username(); before=len(self._vehicles); self._vehicles=[v for v in self._vehicles if not (v['plate']==plate.upper() and (not u or v['username']==u))]
         if len(self._vehicles)==before: raise ParkingError('Không tìm thấy xe đã liên kết.')
-        self.save(); return True
-    def get_requests(self,status='pending'): return [r for r in self._requests if not status or r['status']==status]
+        self.save()
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("vehicle_link", f"Gỡ liên kết xe {plate.upper()}")
+        return True
+    def get_requests(self, status='pending'):
+        result = []
+        for r in self._requests:
+            if not status or r.get('status') == status:
+                item = dict(r)
+                if not item.get('full_name') and self.auth and hasattr(self.auth, '_accounts'):
+                    acc = self.auth._accounts.get(item.get('username'))
+                    if acc:
+                        item['full_name'] = getattr(acc, 'full_name', item.get('username'))
+                        item['phone'] = getattr(acc, 'phone', '')
+                if not item.get('full_name'):
+                    item['full_name'] = item.get('username', 'Khách hàng')
+                if not item.get('phone'):
+                    item['phone'] = ''
+                if not item.get('vehicle_type'):
+                    v = next((x for x in self._vehicles if x.get('plate') == item.get('plate')), {})
+                    item['vehicle_type'] = v.get('vehicle_type', 'motorbike')
+                result.append(item)
+        return result
+
     def get_my_requests(self):
         username = self._username()
         if not username:
             return []
         return [r for r in self._requests
             if r.get("username") == username]
-    def submit_monthly_request(self,plate,months):
-        if months not in (1,3,6,12): raise ParkingError('Gói vé tháng chỉ nhận 1, 3, 6 hoặc 12 tháng.')
-        u=self._username(); plate=plate.strip().upper()
-        if not u or not plate: raise ParkingError('Vui lòng đăng nhập và nhập biển số.')
-        if any(r['plate']==plate and r['status']=='pending' for r in self._requests): raise ParkingError('Xe đã có yêu cầu đang chờ xử lý.')
-        req={'request_id':f"REQ-{datetime.now():%y%m%d%H%M%S%f}",'username':u,'plate':plate,'months':months,'status':'pending','note':'','created_at':datetime.now().isoformat()}; self._requests.append(req); self.save(); return req
-    def resolve_request(self,rid,status,note=''):
-        if status not in ('approved','rejected'): raise ParkingError('Trạng thái xử lý không hợp lệ.')
+
+    def submit_monthly_request(self, plate, months):
+        if months not in (1, 3, 6, 12):
+            raise ParkingError('Gói vé tháng chỉ nhận 1, 3, 6 hoặc 12 tháng.')
+        u = self._username()
+        plate = plate.strip().upper()
+        if not u or not plate:
+            raise ParkingError('Vui lòng đăng nhập và nhập biển số.')
+        if any(r.get('plate') == plate and r.get('status') == 'pending' for r in self._requests):
+            raise ParkingError('Xe đã có yêu cầu đang chờ xử lý.')
+
+        v = next((x for x in self._vehicles if x.get('plate') == plate), {})
+        vtype = v.get('vehicle_type', 'motorbike')
+        full_name = u
+        phone = ''
+        if self.auth and hasattr(self.auth, '_accounts'):
+            acc = self.auth._accounts.get(u)
+            if acc:
+                full_name = getattr(acc, 'full_name', u)
+                phone = getattr(acc, 'phone', '')
+
+        amount = 100000
+        if self.manager:
+            try:
+                p = self.manager.get_prices()
+                base = p.get('monthly', {}).get(vtype, 100000) * months
+                disc = float(str(p.get('monthly_discount', {}).get(months, 0)).replace('%', '').strip() or 0)
+                amount = int(base - (base * disc / 100))
+            except Exception:
+                pass
+
+        req = {
+            'request_id': f"REQ-{datetime.now():%y%m%d%H%M%S}",
+            'username': u,
+            'full_name': full_name,
+            'phone': phone,
+            'plate': plate,
+            'vehicle_type': vtype,
+            'months': months,
+            'amount': amount,
+            'status': 'pending',
+            'note': '',
+            'created_at': datetime.now().isoformat()
+        }
+        self._requests.append(req)
+        self.save()
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("request_submit", f"Gửi yêu cầu vé tháng {req['request_id']}: xe {plate} ({months} tháng)", actor=u, role="user")
+        return req
+
+    def resolve_request(self, rid, status, note=''):
+        if status not in ('approved', 'done', 'rejected'):
+            raise ParkingError('Trạng thái xử lý không hợp lệ.')
         for r in self._requests:
-            if r['request_id']==rid: r['status']=status; r['note']=note; r['resolved_at']=datetime.now().isoformat(); self.save(); return r
+            if r.get('request_id') == rid:
+                r['status'] = status
+                r['note'] = note
+                r['resolved_at'] = datetime.now().isoformat()
+                self.save()
+                if hasattr(self, 'audit') and self.audit:
+                    st_map = {"approved": "Đã duyệt/Kích hoạt", "done": "Hoàn tất", "rejected": "Từ chối"}
+                    self.audit.log("request_resolve", f"Xử lý yêu cầu vé tháng {rid}: {st_map.get(status, status)} (Xe {r.get('plate')})")
+                return r
         raise ParkingError('Không tìm thấy yêu cầu.')
     def get_my_monthly_tickets(self):
         plates={v['plate'] for v in self.get_my_vehicles() if v.get('status')=='verified'}
@@ -163,3 +245,52 @@ class CustomerService:
         p=next((p for p in self.get_my_payments() if p.payment_id==pid),None)
         if not p: raise ParkingError('Không tìm thấy hóa đơn của tài khoản này.')
         return self.payments.build_receipt(pid)
+
+    def add_pending_exit(self, plate, amount, method='bank_transfer', ref='', customer='', slot_id=None):
+        plate = str(plate).strip().upper()
+        if not slot_id and self.manager:
+            for t in getattr(self.manager, 'tickets', []):
+                if t.plate == plate and getattr(t, 'status', '') == 'parked':
+                    slot_id = t.slot_id
+                    break
+        existing = next((x for x in self._pending_exits if x.get('plate') == plate), None)
+        if not existing:
+            cust_name = customer or self._username() or 'Khách hàng'
+            item = {
+                'plate': plate,
+                'customer': cust_name,
+                'slot_id': slot_id or '—',
+                'amount': int(amount),
+                'method': method,
+                'ref': ref or f"CUST-ONL-{datetime.now():%y%m%d%H%M%S}",
+                'paid_at': datetime.now().strftime('%d/%m/%Y %H:%M:%S'),
+                'status': 'waiting_approval'
+            }
+            self._pending_exits.append(item)
+            self.save()
+            if hasattr(self, 'audit') and self.audit:
+                self.audit.log("payment", f"Khách {cust_name} thanh toán online xe {plate}: {int(amount):,.0f} đ ({method}) - Chờ mở barie", actor=cust_name, role="user")
+            return item
+        return existing
+
+    def get_pending_exits(self):
+        self.load()
+        parked_plates = {t.plate for t in getattr(self.manager, 'tickets', []) if getattr(t, 'status', '') == 'parked'}
+        valid_exits = [x for x in self._pending_exits if x.get('plate') in parked_plates]
+        if len(valid_exits) != len(self._pending_exits):
+            self._pending_exits = valid_exits
+            self.save()
+        return list(self._pending_exits)
+
+    def approve_pending_exit(self, plate, cashier="admin"):
+        plate = str(plate).strip().upper()
+        item = next((x for x in self._pending_exits if x.get('plate') == plate), None)
+        ticket = None
+        if self.manager:
+            ticket = self.manager.vehicle_exit(plate, method=item.get('method', 'bank_transfer') if item else 'bank_transfer')
+        if item and item in self._pending_exits:
+            self._pending_exits.remove(item)
+            self.save()
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log("vehicle_exit", f"Xác thực thanh toán online và mở barie cho xe {plate} ra bãi", actor=cashier)
+        return ticket

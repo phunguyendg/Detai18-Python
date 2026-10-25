@@ -5,7 +5,8 @@ import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 
 from config import (COLOR_BG, BANK_INFO, QUICK_CASH, RECEIPT_DIR, CASH_METHOD, COLOR_CARD, COLOR_BORDER, COLOR_MUTED,
-                    COLOR_PRIMARY, COLOR_SUCCESS, COLOR_DANGER, FONT_BASE, FONT_BOLD, FONT_BIG, FONT_SMALL)
+                    COLOR_PRIMARY, COLOR_SUCCESS, COLOR_DANGER, FONT_BASE, FONT_BOLD, FONT_BIG, FONT_SMALL,
+                    ROLE_USER, ROLE_STAFF, ROLE_ADMIN, STAFF_ROLES)
 from gui import validators
 from gui.dialog_base import BaseDialog
 from gui.shift_dialogs import OpenShiftDialog, money_text
@@ -19,10 +20,34 @@ QR_HINTS = {
 
 
 def ensure_shift(parent, payments, cashier="") -> bool:
-    """Điều kiện bắt buộc trước khi thu tiền: phải có ca trực đang mở."""
+    """Điều kiện bắt buộc trước khi thu tiền: CHỈ ÁP DỤNG CHO NHÂN VIÊN CA TRỰC.
+    Khách hàng (customer) hoàn toàn không liên quan gì đến ca trực, tuyệt đối không kiểm tra!"""
+    c_str = str(cashier or "").lower().strip()
+
+    # 1. Khách hàng: KHÔNG LIÊN QUAN ĐẾN CA TRỰC, bỏ qua 100% không bao giờ hỏi
+    if c_str in ("hung", "khach01", "khach", "khachhang", "customer", "user") or "khach" in c_str:
+        return True
+    if hasattr(parent, "is_customer") and callable(parent.is_customer):
+        try:
+            if parent.is_customer():
+                return True
+        except Exception:
+            pass
+    if hasattr(parent, "user_role") and str(getattr(parent.user_role, 'value', parent.user_role)).lower() in ('user', 'customer', 'khach01'):
+        return True
+    if hasattr(parent, "user") and parent.user and getattr(parent.user, 'role', '') == ROLE_USER:
+        return True
+
+    # 2. Quản trị viên (admin): có toàn quyền thao tác, không bị phụ thuộc ca trực nhân viên
+    if c_str in ('admin', 'quantri', 'quanly', 'superadmin'):
+        return True
+    if hasattr(parent, "user") and parent.user and parent.user.role == ROLE_ADMIN:
+        return True
+
+    # 3. CHỈ NHÂN VIÊN CA TRỰC (STAFF) MỚI CẦN KIỂM TRA CA TRỰC ĐANG MỞ
     cur = payments.current_shift()
     if cur:
-        if cur.cashier != cashier:
+        if cur.cashier != cashier and cashier:
             messagebox.showwarning("Ca của người khác", f"Ca {cur.shift_id} đang mở bởi {cur.cashier}.\n"
                                    "Hãy nhờ họ chốt ca (hoặc nhờ quản trị viên chốt thay) rồi mở ca mới.", parent=parent)
             return False
