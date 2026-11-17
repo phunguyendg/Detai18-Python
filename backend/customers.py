@@ -26,7 +26,9 @@ class CustomerService:
     def get_public_slots(self): return self.manager.lot.get_all_slots()
     def get_my_vehicles(self):
         u = self._username()
-        raw_list = [v for v in self._vehicles if (not u or v.get('username') == u)]
+        if not u:
+            return []
+        raw_list = [v for v in self._vehicles if v.get('username') == u]
         result = []
         parked_tickets = {t.plate: t for t in getattr(self.manager, 'tickets', []) if getattr(t, 'status', '') == 'parked'}
         for v in raw_list:
@@ -60,6 +62,29 @@ class CustomerService:
                     pass
             result.append(item)
         return result
+
+    def get_my_parked_tickets(self):
+        """Lọc danh sách vé xe đang đỗ thuộc sở hữu của tài khoản khách hàng đang đăng nhập."""
+        username = self._username()
+        if not username or not self.manager:
+            return []
+
+        my_plates = {
+            v.get("plate", "").strip().upper()
+            for v in self._vehicles
+            if v.get("username") == username
+        }
+
+        user_phone = getattr(getattr(self.auth, "_current_user", None), "phone", "")
+        if self.monthly and user_phone:
+            for mt in self.monthly.get_all_monthly_tickets():
+                if mt.phone == user_phone:
+                    my_plates.add(mt.plate.strip().upper())
+
+        return [
+            t for t in getattr(self.manager, "tickets", [])
+            if getattr(t, "status", "") == "parked" and t.plate.strip().upper() in my_plates
+        ]
 
     def get_pending_vehicles(self):
         return [v for v in self._vehicles if v.get('status') == 'pending']
