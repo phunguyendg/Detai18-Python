@@ -83,17 +83,62 @@ class MonthlyManager:
         return bool(t and t.is_valid(today))
 
     def add_monthly_ticket(self, plate, owner, phone, vehicle_type, start_date, end_date):
-        plate = plate.upper()
-        if plate in self._tickets:
-            raise DuplicateMonthlyTicketError(f"Xe {plate} đã có vé tháng.")
+        """Cấp mới (INSERT) vé tháng. Báo lỗi nếu biển số đã có vé trong hệ thống."""
+        plate = plate.strip().upper()
+        old = self._tickets.get(plate)
+        if old:
+            if old.is_valid():
+                raise DuplicateMonthlyTicketError(
+                    f"Xe {plate} đã có vé tháng còn hạn đến {old.end_date:%d/%m/%Y}. Vui lòng chọn chức năng Gia hạn."
+                )
+            raise DuplicateMonthlyTicketError(
+                f"Xe {plate} đã có vé tháng (hết hạn {old.end_date:%d/%m/%Y}). Vui lòng chọn chức năng Gia hạn."
+            )
         self._validate(plate, vehicle_type, start_date, end_date)
         ticket = MonthlyTicket(plate, owner.strip(), phone.strip(),
                                vehicle_type, start_date, end_date)
         self._tickets[plate] = ticket
         self.save()
         if hasattr(self, 'audit') and self.audit:
-            self.audit.log("monthly_manage", f"Mua/Kích hoạt vé tháng cho xe {plate} (Chủ xe: {owner.strip()}, Hạn đến: {end_date:%d/%m/%Y})")
+            self.audit.log("monthly_manage", f"Cấp mới vé tháng cho xe {plate} (Chủ xe: {owner.strip()}, Hạn đến: {end_date:%d/%m/%Y})")
         return ticket
+
+    def renew_monthly_ticket(self, plate: str, months: int, owner: str = "", phone: str = "",
+                             start_date: date | None = None) -> MonthlyTicket:
+        """Gia hạn (UPDATE) vé tháng hiện có bằng cách cộng dồn số tháng vào ngày hết hạn."""
+        plate = plate.strip().upper()
+        ve_cu = self._tickets.get(plate)
+        if not ve_cu:
+            raise ParkingError(f"Xe {plate} chưa có vé tháng để gia hạn. Vui lòng chọn Đăng ký mới.")
+
+        months = int(months)
+        if months not in (1, 3, 6, 12):
+            raise ParkingError("Gói gia hạn vé tháng chỉ nhận 1, 3, 6 hoặc 12 tháng.")
+
+        today = date.today()
+        # Nếu vé còn hạn thì cộng nối tiếp sau ngày hết hạn cũ; hết hạn rồi thì tính từ ngày bắt đầu mới
+        if ve_cu.end_date >= today:
+            moc_bat_dau = ve_cu.end_date + timedelta(days=1)
+        else:
+            moc_bat_dau = start_date or today
+            ve_cu.start_date = moc_bat_dau
+
+        ngay_het_han_moi = self._add_months(moc_bat_dau, months) - timedelta(days=1)
+        ve_cu.end_date = ngay_het_han_moi
+
+        if owner and owner.strip():
+            ve_cu.owner = owner.strip()
+        if phone and phone.strip():
+            ve_cu.phone = phone.strip()
+
+        self._validate(ve_cu.plate, ve_cu.vehicle_type, ve_cu.start_date, ve_cu.end_date)
+        self.save()
+        if hasattr(self, 'audit') and self.audit:
+            self.audit.log(
+                "monthly_manage",
+                f"Gia hạn vé tháng xe {plate} thêm {months} tháng (Hạn mới: {ngay_het_han_moi:%d/%m/%Y})"
+            )
+        return ve_cu
 
     def update_monthly_ticket(self, plate, **kwargs):
         plate = plate.upper()
@@ -117,12 +162,24 @@ class MonthlyManager:
                 self.audit.log("monthly_manage", f"Xóa vé tháng xe {plate.upper()}")
         return ok
 
-    def quote_monthly(self, plate, vehicle_type, months, start_date) -> dict:
+    def quote_monthly(self, plate, vehicle_type, months, start_date=None, mode="auto") -> dict:
         if vehicle_type not in VEHICLE_TYPES:
             raise ParkingError("Loại xe không hợp lệ.")
+        months = int(months)
         if months not in (1, 3, 6, 12):
             raise ParkingError("Gói vé tháng chỉ nhận 1, 3, 6 hoặc 12 tháng.")
-        
+
+        plate = plate.strip().upper()
+        today = date.today()
+        old = self._tickets.get(plate)
+
+        if mode == "new" and old and old.is_valid(today):
+            raise DuplicateMonthlyTicketError(
+                f"Xe {plate} đã có vé tháng còn hạn đến {old.end_date:%d/%m/%Y}. Vui lòng chọn Gia hạn."
+            )
+        if mode == "renew" and not old:
+            raise ParkingError(f"Xe {plate} chưa có vé tháng để gia hạn. Vui lòng chọn Đăng ký mới.")
+
         prices = self._prices_provider()
         base_price = prices["monthly"][vehicle_type]
         disc_pct = prices["monthly_discount"].get(months, 0)
@@ -130,47 +187,76 @@ class MonthlyManager:
         discount = base * disc_pct // 100
         total = base - discount
 
-        plate = plate.upper()
-        today = date.today()
         start = start_date or today
-        old = self._tickets.get(plate)
-        is_renewal = False
-        
-        if old and old.end_date >= start:
+        is_renewal = bool(old)
+        if old and old.end_date >= today:
             start = old.end_date + timedelta(days=1)
-            is_renewal = True
+
         end = self._add_months(start, months) - timedelta(days=1)
 
         return {
-            "base": base, "discount": discount, "discount_pct": disc_pct,
-            "total": total, "start_date": start, "end_date": end,
+            "base": base,
+            "discount": discount,
+            "discount_pct": disc_pct,
+            "total": total,
+            "start_date": start,
+            "end_date": end,
             "is_renewal": is_renewal,
+            "old_end_date": old.end_date if old else None,
         }
 
     def purchase_monthly_ticket(self, plate, owner, phone, vehicle_type, months,
-                                start_date, method, received, reference):
+                                start_date, method, received, reference, mode="auto"):
+        """Thu tiền và cấp mới (INSERT) hoặc gia hạn (UPDATE) vé tháng tùy theo trạng thái vé."""
         plate = plate.strip().upper()
         if not plate or not owner.strip() or not phone.strip():
             raise ParkingError("Biển số, tên chủ xe và số điện thoại không được để trống.")
-        q = self.quote_monthly(plate, vehicle_type, int(months), start_date)
-        old = self._tickets.get(plate)
-        # Không ghi vé mới khi thanh toán chưa thành công.
         if self._payments is None:
             raise ParkingError("Chưa cấu hình dịch vụ thanh toán, không thể mua vé tháng.")
+
+        months = int(months)
+        q = self.quote_monthly(plate, vehicle_type, months, start_date, mode=mode)
+        action_label = "Gia hạn" if q["is_renewal"] else "Đăng ký mới"
+
+        # Thu tiền trước khi lưu vé; nếu thu tiền lỗi thì dữ liệu vé giữ nguyên
         payment = self._payments.create_payment(
-            kind="monthly", plate=plate, amount=q["total"], method=method,
-            received=received, reference=reference,
-            description=f"Vé tháng {months} tháng ({q['start_date']} → {q['end_date']})")
-        ticket = MonthlyTicket(plate, owner.strip(), phone.strip(), vehicle_type,
-                               q["start_date"], q["end_date"])
-        self._tickets[plate] = ticket
-        try:
-            self.save()
-        except Exception:
-            # Tránh để giao dịch dở dang trong bộ nhớ; lịch sử thanh toán vẫn được lưu để đối soát.
-            if old is not None: self._tickets[plate] = old
-            else: self._tickets.pop(plate, None)
-            raise
+            kind="monthly",
+            plate=plate,
+            amount=q["total"],
+            method=method,
+            received=received,
+            reference=reference,
+            description=f"{action_label} vé tháng {months} tháng ({q['start_date']} → {q['end_date']})",
+        )
+
+        if q["is_renewal"]:
+            ticket = self.renew_monthly_ticket(
+                plate=plate,
+                months=months,
+                owner=owner,
+                phone=phone,
+                start_date=start_date,
+            )
+        else:
+            ticket = MonthlyTicket(
+                plate,
+                owner.strip(),
+                phone.strip(),
+                vehicle_type,
+                q["start_date"],
+                q["end_date"],
+            )
+            self._tickets[plate] = ticket
+            try:
+                self.save()
+            except Exception:
+                self._tickets.pop(plate, None)
+                raise
+            if hasattr(self, 'audit') and self.audit:
+                self.audit.log(
+                    "monthly_manage",
+                    f"Đăng ký mới vé tháng xe {plate} ({months} tháng, hạn đến: {q['end_date']:%d/%m/%Y})"
+                )
         return ticket, payment
 
     @staticmethod
