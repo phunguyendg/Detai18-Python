@@ -1,24 +1,24 @@
 [
   {
     "slot_id": "A1",
-    "status": "empty",
-    "current_plate": "",
+    "status": "occupied",
+    "current_plate": "59A1-12345",
     "note": "",
-    "entry_time": null
+    "entry_time": "2026-11-17T06:15:00"
   },
   {
     "slot_id": "A2",
     "status": "occupied",
-    "current_plate": "51A-999.88",
+    "current_plate": "78AH-123.34",
     "note": "",
-    "entry_time": "2026-10-22T14:51:06.273438"
+    "entry_time": "2026-11-17T15:30:24.076931"
   },
   {
     "slot_id": "A3",
-    "status": "empty",
-    "current_plate": "",
+    "status": "occupied",
+    "current_plate": "51F-888.99",
     "note": "",
-    "entry_time": null
+    "entry_time": "2026-11-17T07:10:00"
   },
   {
     "slot_id": "A4",
@@ -78,10 +78,10 @@
   },
   {
     "slot_id": "B2",
-    "status": "empty",
-    "current_plate": "",
+    "status": "occupied",
+    "current_plate": "29B1-888.88",
     "note": "",
-    "entry_time": null
+    "entry_time": "2026-11-17T05:50:00"
   },
   {
     "slot_id": "B3",
