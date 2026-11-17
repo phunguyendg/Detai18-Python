@@ -4,7 +4,23 @@
     "owner": "Trần Gia Hưng",
     "phone": "0392926544",
     "vehicle_type": "motorbike",
-    "start_date": "2026-10-17",
-    "end_date": "2026-11-16"
+    "start_date": "2026-11-01",
+    "end_date": "2026-12-01"
+  },
+  {
+    "plate": "51F-888.99",
+    "owner": "Nguyễn Thị Mai Anh",
+    "phone": "0934567890",
+    "vehicle_type": "car",
+    "start_date": "2026-10-20",
+    "end_date": "2026-11-20"
+  },
+  {
+    "plate": "59C1-456.78",
+    "owner": "Võ Thành Long",
+    "phone": "0582345678",
+    "vehicle_type": "motorbike",
+    "start_date": "2026-10-01",
+    "end_date": "2026-10-31"
   }
 ]
