@@ -2,7 +2,89 @@
   "admin": {
     "username": "admin",
     "password": "admin123",
-    "full_name": "Quản trị viên",
+    "full_name": "Quản trị viên",{
+  "admin": {
+    "username": "admin",
+    "password": "admin123",
+    "full_name": "Quản trị viên Hệ thống",
+    "phone": "0901112223",
+    "role": "admin",
+    "active": true,
+    "must_change_password": false
+  },
+  "quanly": {
+    "username": "quanly",
+    "password": "Quanly123",
+    "full_name": "Lê Minh Quân",
+    "phone": "0908889991",
+    "role": "admin",
+    "active": true,
+    "must_change_password": false
+  },
+  "nhanvien": {
+    "username": "nhanvien",
+    "password": "nhanvien123",
+    "full_name": "Nguyễn Văn Nhân Viên",
+    "phone": "0912345678",
+    "role": "staff",
+    "active": true,
+    "must_change_password": false
+  },
+  "thungan01": {
+    "username": "thungan01",
+    "password": "Thungan123",
+    "full_name": "Phạm Thị Thu Ngân",
+    "phone": "0987654321",
+    "role": "staff",
+    "active": true,
+    "must_change_password": false
+  },
+  "nv_moi01": {
+    "username": "nv_moi01",
+    "password": "Temp1234",
+    "full_name": "Hoàng Minh Tuấn",
+    "phone": "0365112233",
+    "role": "staff",
+    "active": true,
+    "must_change_password": true
+  },
+  "nv_khoa": {
+    "username": "nv_khoa",
+    "password": "Khoa1234",
+    "full_name": "Đỗ Quốc Bảo",
+    "phone": "0778990011",
+    "role": "staff",
+    "active": false,
+    "must_change_password": false
+  },
+  "hung": {
+    "username": "hung",
+    "password": "123456hung",
+    "full_name": "Trần Gia Hưng",
+    "phone": "0392926544",
+    "role": "user",
+    "active": true,
+    "must_change_password": false
+  },
+  "khach01": {
+    "username": "khach01",
+    "password": "khach123",
+    "full_name": "Nguyễn Thị Mai Anh",
+    "phone": "0934567890",
+    "role": "user",
+    "active": true,
+    "must_change_password": false
+  },
+  "khach02": {
+    "username": "khach02",
+    "password": "Khach2345",
+    "full_name": "Võ Thành Long",
+    "phone": "0582345678",
+    "role": "user",
+    "active": true,
+    "must_change_password": false
+  }
+}
     "phone": "0900000000",
     "role": "admin",
     "active": true,
