@@ -1,232 +1,382 @@
 [
   {
-    "time": "2026-10-24T13:42:54.778239",
-    "actor": "admin",
-    "role": "admin",
-    "action": "vehicle_entry",
-    "detail": "Xe 30F-654.32 (Ô tô) vào ô A3 - Mã vé: T-261022-HIST1",
-    "created_at": "2026-10-24T13:42:54.778239",
-    "username": "admin",
-    "description": "Xe 30F-654.32 (Ô tô) vào ô A3 - Mã vé: T-261022-HIST1"
-  },
-  {
-    "time": "2026-10-24T14:37:54.778239",
-    "actor": "admin",
-    "role": "admin",
+    "time": "2026-11-16T08:00:00",
+    "actor": "nhanvien",
+    "role": "staff",
     "action": "shift_open",
     "detail": "Mở ca trực S01, tiền đầu ca 500.000 đ",
-    "created_at": "2026-10-24T14:37:54.778239",
-    "username": "admin",
+    "created_at": "2026-11-16T08:00:00",
+    "username": "nhanvien",
     "description": "Mở ca trực S01, tiền đầu ca 500.000 đ"
   },
   {
-    "time": "2026-10-24T14:37:54.778239",
+    "time": "2026-11-16T10:15:00",
+    "actor": "nhanvien",
+    "role": "staff",
+    "action": "payment",
+    "detail": "PAY-261116-001: Thu 120.000 đ (Chuyển khoản / VietQR) - Xe 78AH-123.34",
+    "created_at": "2026-11-16T10:15:00",
+    "username": "nhanvien",
+    "description": "PAY-261116-001: Thu 120.000 đ (Chuyển khoản / VietQR) - Xe 78AH-123.34"
+  },
+  {
+    "time": "2026-11-16T17:15:00",
+    "actor": "nhanvien",
+    "role": "staff",
+    "action": "vehicle_exit",
+    "detail": "Xe 51A-999.88 ra khỏi ô A2, phí 30.000 đ (Tiền mặt)",
+    "created_at": "2026-11-16T17:15:00",
+    "username": "nhanvien",
+    "description": "Xe 51A-999.88 ra khỏi ô A2, phí 30.000 đ (Tiền mặt)"
+  },
+  {
+    "time": "2026-11-16T18:00:00",
+    "actor": "nhanvien",
+    "role": "staff",
+    "action": "shift_close",
+    "detail": "Chốt ca trực S01: lệch 0 đ (thực tế 530.000 đ)",
+    "created_at": "2026-11-16T18:00:00",
+    "username": "nhanvien",
+    "description": "Chốt ca trực S01: lệch 0 đ (thực tế 530.000 đ)"
+  },
+  {
+    "time": "2026-11-17T04:00:00",
+    "actor": "admin",
+    "role": "admin",
+    "action": "vehicle_entry",
+    "detail": "Xe 30F-654.32 (Ô tô) vào ô A4 - Mã vé: T-261117-HIST1",
+    "created_at": "2026-11-17T04:00:00",
+    "username": "admin",
+    "description": "Xe 30F-654.32 (Ô tô) vào ô A4 - Mã vé: T-261117-HIST1"
+  },
+  {
+    "time": "2026-11-17T05:00:00",
+    "actor": "admin",
+    "role": "admin",
+    "action": "shift_open",
+    "detail": "Mở ca trực S02, tiền đầu ca 500.000 đ",
+    "created_at": "2026-11-17T05:00:00",
+    "username": "admin",
+    "description": "Mở ca trực S02, tiền đầu ca 500.000 đ"
+  },
+  {
+    "time": "2026-11-17T05:30:00",
     "actor": "admin",
     "role": "admin",
     "action": "payment",
-    "detail": "PAY-261022-001: Thu 10.000 đ (Chuyển khoản / VietQR) - Xe 30F-654.32",
-    "created_at": "2026-10-24T14:37:54.778239",
+    "detail": "PAY-261117-001: Thu 20.000 đ (Chuyển khoản / VietQR) - Xe 30F-654.32",
+    "created_at": "2026-11-17T05:30:00",
     "username": "admin",
-    "description": "PAY-261022-001: Thu 10.000 đ (Chuyển khoản / VietQR) - Xe 30F-654.32"
+    "description": "PAY-261117-001: Thu 20.000 đ (Chuyển khoản / VietQR) - Xe 30F-654.32"
   },
   {
-    "time": "2026-10-24T14:37:54.778239",
+    "time": "2026-11-17T05:30:05",
     "actor": "admin",
     "role": "admin",
     "action": "vehicle_exit",
-    "detail": "Xe 30F-654.32 ra khỏi ô A3, phí 10.000 đ",
-    "created_at": "2026-10-24T14:37:54.778239",
+    "detail": "Xe 30F-654.32 ra khỏi ô A4, phí 20.000 đ",
+    "created_at": "2026-11-17T05:30:05",
     "username": "admin",
-    "description": "Xe 30F-654.32 ra khỏi ô A3, phí 10.000 đ"
+    "description": "Xe 30F-654.32 ra khỏi ô A4, phí 20.000 đ"
   },
   {
-    "time": "2026-10-24T15:42:54.778239",
+    "time": "2026-11-17T05:50:00",
     "actor": "admin",
     "role": "admin",
     "action": "vehicle_entry",
-    "detail": "Xe 29B1-888.88 (Xe máy) vào ô B2 - Mã vé: T-261022-MOTO2",
-    "created_at": "2026-10-24T15:42:54.778239",
+    "detail": "Xe 29B1-888.88 (Xe máy) vào ô B2 - Mã vé: T-261117-MOTO2",
+    "created_at": "2026-11-17T05:50:00",
     "username": "admin",
-    "description": "Xe 29B1-888.88 (Xe máy) vào ô B2 - Mã vé: T-261022-MOTO2"
+    "description": "Xe 29B1-888.88 (Xe máy) vào ô B2 - Mã vé: T-261117-MOTO2"
   },
   {
-    "time": "2026-10-24T16:07:54.778239",
+    "time": "2026-11-17T06:05:00",
+    "actor": "admin",
+    "role": "admin",
+    "action": "monthly_manage",
+    "detail": "Gia hạn vé tháng xe 51F-888.99 (Chủ xe: Nguyễn Thị Mai Anh, Hạn đến: 20/11/2026)",
+    "created_at": "2026-11-17T06:05:00",
+    "username": "admin",
+    "description": "Gia hạn vé tháng xe 51F-888.99 (Chủ xe: Nguyễn Thị Mai Anh, Hạn đến: 20/11/2026)"
+  },
+  {
+    "time": "2026-11-17T06:15:00",
     "actor": "admin",
     "role": "admin",
     "action": "vehicle_entry",
-    "detail": "Xe 59A1-12345 (Ô tô) vào ô A1 - Mã vé: T-261022-CAR1",
-    "created_at": "2026-10-24T16:07:54.778239",
+    "detail": "Xe 59A1-12345 (Ô tô) vào ô A1 - Mã vé: T-261117-CAR1",
+    "created_at": "2026-11-17T06:15:00",
     "username": "admin",
-    "description": "Xe 59A1-12345 (Ô tô) vào ô A1 - Mã vé: T-261022-CAR1"
+    "description": "Xe 59A1-12345 (Ô tô) vào ô A1 - Mã vé: T-261117-CAR1"
   },
   {
-    "time": "2026-10-24T16:37:54.778239",
-    "actor": "admin",
-    "role": "admin",
-    "action": "vehicle_entry",
-    "detail": "Xe 51A-999.88 (Ô tô) vào ô A2 - Mã vé: T-261022-CAR2",
-    "created_at": "2026-10-24T16:37:54.778239",
-    "username": "admin",
-    "description": "Xe 51A-999.88 (Ô tô) vào ô A2 - Mã vé: T-261022-CAR2"
-  },
-  {
-    "time": "2026-10-24T16:37:54.778239",
+    "time": "2026-11-17T06:25:00",
     "actor": "hung",
     "role": "user",
     "action": "request_submit",
-    "detail": "Gửi yêu cầu vé tháng REQ-261022-01: xe 59K1-777.66 (1 tháng)",
-    "created_at": "2026-10-24T16:37:54.778239",
+    "detail": "Gửi yêu cầu vé tháng REQ-261117-01: xe 59K1-777.66 (1 tháng)",
+    "created_at": "2026-11-17T06:25:00",
     "username": "hung",
-    "description": "Gửi yêu cầu vé tháng REQ-261022-01: xe 59K1-777.66 (1 tháng)"
+    "description": "Gửi yêu cầu vé tháng REQ-261117-01: xe 59K1-777.66 (1 tháng)"
   },
   {
-    "time": "2026-10-24T17:07:54.778239",
-    "actor": "admin",
-    "role": "admin",
+    "time": "2026-11-17T06:45:00",
+    "actor": "hung",
+    "role": "user",
     "action": "vehicle_entry",
-    "detail": "Xe 78AH-123.34 (Xe máy) vào ô B1 - Mã vé: T-261022-MOTO1",
-    "created_at": "2026-10-24T17:07:54.778239",
-    "username": "admin",
-    "description": "Xe 78AH-123.34 (Xe máy) vào ô B1 - Mã vé: T-261022-MOTO1"
+    "detail": "Khách tự đưa xe 51A-999.88 (Ô tô) vào ô A2",
+    "created_at": "2026-11-17T06:45:00",
+    "username": "hung",
+    "description": "Khách tự đưa xe 51A-999.88 (Ô tô) vào ô A2"
   },
   {
-    "time": "2026-10-24T17:22:54.778239",
+    "time": "2026-11-17T07:10:00",
+    "actor": "khach01",
+    "role": "user",
+    "action": "vehicle_entry",
+    "detail": "Khách tự đưa xe 51F-888.99 (Ô tô) vào ô A3",
+    "created_at": "2026-11-17T07:10:00",
+    "username": "khach01",
+    "description": "Khách tự đưa xe 51F-888.99 (Ô tô) vào ô A3"
+  },
+  {
+    "time": "2026-11-17T07:12:00",
+    "actor": "khach02",
+    "role": "user",
+    "action": "request_submit",
+    "detail": "Gửi yêu cầu vé tháng REQ-261117-02: xe 59C1-456.78 (3 tháng)",
+    "created_at": "2026-11-17T07:12:00",
+    "username": "khach02",
+    "description": "Gửi yêu cầu vé tháng REQ-261117-02: xe 59C1-456.78 (3 tháng)"
+  },
+  {
+    "time": "2026-11-17T07:20:00",
+    "actor": "hung",
+    "role": "user",
+    "action": "vehicle_entry",
+    "detail": "Khách tự đưa xe 78AH-123.34 (Xe máy) vào ô B1",
+    "created_at": "2026-11-17T07:20:00",
+    "username": "hung",
+    "description": "Khách tự đưa xe 78AH-123.34 (Xe máy) vào ô B1"
+  },
+  {
+    "time": "2026-11-17T07:25:00",
     "actor": "admin",
     "role": "admin",
     "action": "maintenance",
     "detail": "Ô B3: Đặt bảo trì - Sơn lại vạch kẻ chỗ đỗ xe",
-    "created_at": "2026-10-24T17:22:54.778239",
+    "created_at": "2026-11-17T07:25:00",
     "username": "admin",
     "description": "Ô B3: Đặt bảo trì - Sơn lại vạch kẻ chỗ đỗ xe"
   },
   {
-    "time": "2026-10-24T17:37:54.778239",
-    "actor": "admin",
-    "role": "admin",
+    "time": "2026-11-17T15:26:38.877665",
+    "actor": "hung",
+    "role": "user",
     "action": "login",
     "detail": "Đăng nhập thành công",
-    "created_at": "2026-10-24T17:37:54.778239",
-    "username": "admin",
+    "created_at": "2026-11-17T15:26:38.877665",
+    "username": "hung",
     "description": "Đăng nhập thành công"
   },
   {
-    "time": "2026-10-24T17:53:03.377485",
+    "time": "2026-11-17T15:26:51.176771",
     "actor": "admin",
-    "role": "admin",
-    "action": "login",
-    "detail": "Đăng nhập thành công",
-    "created_at": "2026-10-24T17:53:03.377485",
-    "username": "admin",
-    "description": "Đăng nhập thành công"
-  },
-  {
-    "time": "2026-10-24T17:53:03.378735",
-    "actor": "admin",
-    "role": "admin",
+    "role": "user",
     "action": "payment",
-    "detail": "PAY-261024175303377976: Thu 20,000 đ (Tiền mặt) - Xe 59A1-TEST",
-    "created_at": "2026-10-24T17:53:03.378735",
+    "detail": "PAY-261117152651174982: Thu 90,000 đ (Chuyển khoản / VietQR) - Xe 51A-999.88",
+    "created_at": "2026-11-17T15:26:51.176771",
     "username": "admin",
-    "description": "PAY-261024175303377976: Thu 20,000 đ (Tiền mặt) - Xe 59A1-TEST"
+    "description": "PAY-261117152651174982: Thu 90,000 đ (Chuyển khoản / VietQR) - Xe 51A-999.88"
   },
   {
-    "time": "2026-10-25T01:04:34.965400",
-    "actor": "admin",
-    "role": "admin",
-    "action": "login",
-    "detail": "Đăng nhập thành công",
-    "created_at": "2026-10-25T01:04:34.965400",
-    "username": "admin",
-    "description": "Đăng nhập thành công"
+    "time": "2026-11-17T15:26:51.181726",
+    "actor": "hung",
+    "role": "user",
+    "action": "payment",
+    "detail": "Khách hung thanh toán online xe 51A-999.88: 90,000 đ (bank_transfer) - Chờ mở barie",
+    "created_at": "2026-11-17T15:26:51.181726",
+    "username": "hung",
+    "description": "Khách hung thanh toán online xe 51A-999.88: 90,000 đ (bank_transfer) - Chờ mở barie"
   },
   {
-    "time": "2026-10-25T01:04:50.606664",
+    "time": "2026-11-17T15:26:53.106125",
     "actor": "admin",
-    "role": "admin",
+    "role": "user",
+    "action": "payment",
+    "detail": "PAY-261117152653103690: Thu 90,000 đ (Chuyển khoản / VietQR) - Xe 51A-999.88",
+    "created_at": "2026-11-17T15:26:53.106125",
+    "username": "admin",
+    "description": "PAY-261117152653103690: Thu 90,000 đ (Chuyển khoản / VietQR) - Xe 51A-999.88"
+  },
+  {
+    "time": "2026-11-17T15:26:56.330201",
+    "actor": "hung",
+    "role": "user",
+    "action": "payment",
+    "detail": "Khách hung thanh toán online xe 78AH-123.34: 0 đ (bank_transfer) - Chờ mở barie",
+    "created_at": "2026-11-17T15:26:56.330201",
+    "username": "hung",
+    "description": "Khách hung thanh toán online xe 78AH-123.34: 0 đ (bank_transfer) - Chờ mở barie"
+  },
+  {
+    "time": "2026-11-17T15:27:02.615104",
+    "actor": "hung",
+    "role": "user",
     "action": "logout",
     "detail": "Đăng xuất khỏi hệ thống",
-    "created_at": "2026-10-25T01:04:50.606664",
-    "username": "admin",
+    "created_at": "2026-11-17T15:27:02.615104",
+    "username": "hung",
     "description": "Đăng xuất khỏi hệ thống"
   },
   {
-    "time": "2026-10-25T09:44:41.688140",
+    "time": "2026-11-17T15:27:24.943424",
+    "actor": "quanly",
+    "role": "admin",
+    "action": "login",
+    "detail": "Đăng nhập thành công",
+    "created_at": "2026-11-17T15:27:24.943424",
+    "username": "quanly",
+    "description": "Đăng nhập thành công"
+  },
+  {
+    "time": "2026-11-17T15:27:44.470964",
+    "actor": "quanly",
+    "role": "admin",
+    "action": "logout",
+    "detail": "Đăng xuất khỏi hệ thống",
+    "created_at": "2026-11-17T15:27:44.470964",
+    "username": "quanly",
+    "description": "Đăng xuất khỏi hệ thống"
+  },
+  {
+    "time": "2026-11-17T15:27:54.199241",
     "actor": "admin",
     "role": "admin",
     "action": "login",
     "detail": "Đăng nhập thành công",
-    "created_at": "2026-10-25T09:44:41.688140",
+    "created_at": "2026-11-17T15:27:54.199241",
     "username": "admin",
     "description": "Đăng nhập thành công"
   },
   {
-    "time": "2026-10-25T09:45:02.659658",
-    "actor": "admin",
-    "role": "admin",
-    "action": "payment",
-    "detail": "PAY-261025094502656921: Thu 680,000 đ (Chuyển khoản / VietQR) - Xe 59A1-12345",
-    "created_at": "2026-10-25T09:45:02.659658",
-    "username": "admin",
-    "description": "PAY-261025094502656921: Thu 680,000 đ (Chuyển khoản / VietQR) - Xe 59A1-12345"
-  },
-  {
-    "time": "2026-10-25T09:45:02.664125",
+    "time": "2026-11-17T15:28:03.313199",
     "actor": "admin",
     "role": "admin",
     "action": "vehicle_exit",
-    "detail": "Xe 59A1-12345 ra khỏi ô A1, phí 680,000 đ",
-    "created_at": "2026-10-25T09:45:02.664125",
+    "detail": "Xe 51A-999.88 ra khỏi ô A2, phí 90,000 đ",
+    "created_at": "2026-11-17T15:28:03.313199",
     "username": "admin",
-    "description": "Xe 59A1-12345 ra khỏi ô A1, phí 680,000 đ"
+    "description": "Xe 51A-999.88 ra khỏi ô A2, phí 90,000 đ"
   },
   {
-    "time": "2026-10-25T09:45:06.506928",
+    "time": "2026-11-17T15:28:03.315401",
     "actor": "admin",
     "role": "admin",
-    "action": "payment",
-    "detail": "PAY-261025094506504337: Thu 680,000 đ (Chuyển khoản / VietQR) - Xe 59A1-12345",
-    "created_at": "2026-10-25T09:45:06.506928",
+    "action": "vehicle_exit",
+    "detail": "Xác thực thanh toán online và mở barie cho xe 51A-999.88 ra bãi",
+    "created_at": "2026-11-17T15:28:03.315401",
     "username": "admin",
-    "description": "PAY-261025094506504337: Thu 680,000 đ (Chuyển khoản / VietQR) - Xe 59A1-12345"
+    "description": "Xác thực thanh toán online và mở barie cho xe 51A-999.88 ra bãi"
   },
   {
-    "time": "2026-10-25T09:45:13.361697",
+    "time": "2026-11-17T15:28:06.344626",
     "actor": "admin",
     "role": "admin",
     "action": "vehicle_exit",
     "detail": "Xe 78AH-123.34 ra khỏi ô B1, phí 0 đ",
-    "created_at": "2026-10-25T09:45:13.361697",
+    "created_at": "2026-11-17T15:28:06.344626",
     "username": "admin",
     "description": "Xe 78AH-123.34 ra khỏi ô B1, phí 0 đ"
   },
   {
-    "time": "2026-10-25T09:45:17.866266",
-    "actor": "admin",
-    "role": "admin",
-    "action": "payment",
-    "detail": "PAY-261025094517863655: Thu 204,000 đ (Chuyển khoản / VietQR) - Xe 29B1-888.88",
-    "created_at": "2026-10-25T09:45:17.866266",
-    "username": "admin",
-    "description": "PAY-261025094517863655: Thu 204,000 đ (Chuyển khoản / VietQR) - Xe 29B1-888.88"
-  },
-  {
-    "time": "2026-10-25T09:45:17.870211",
+    "time": "2026-11-17T15:28:06.347111",
     "actor": "admin",
     "role": "admin",
     "action": "vehicle_exit",
-    "detail": "Xe 29B1-888.88 ra khỏi ô B2, phí 204,000 đ",
-    "created_at": "2026-10-25T09:45:17.870211",
+    "detail": "Xác thực thanh toán online và mở barie cho xe 78AH-123.34 ra bãi",
+    "created_at": "2026-11-17T15:28:06.347111",
     "username": "admin",
-    "description": "Xe 29B1-888.88 ra khỏi ô B2, phí 204,000 đ"
+    "description": "Xác thực thanh toán online và mở barie cho xe 78AH-123.34 ra bãi"
   },
   {
-    "time": "2026-10-25T09:45:36.388535",
+    "time": "2026-11-17T15:28:48.787197",
+    "actor": "admin",
+    "role": "admin",
+    "action": "shift_close",
+    "detail": "Chốt ca trực S02: lệch 0 đ (thực tế 500,000 đ)",
+    "created_at": "2026-11-17T15:28:48.787197",
+    "username": "admin",
+    "description": "Chốt ca trực S02: lệch 0 đ (thực tế 500,000 đ)"
+  },
+  {
+    "time": "2026-11-17T15:29:00.287405",
     "actor": "admin",
     "role": "admin",
     "action": "logout",
     "detail": "Đăng xuất khỏi hệ thống",
-    "created_at": "2026-10-25T09:45:36.388535",
+    "created_at": "2026-11-17T15:29:00.287405",
     "username": "admin",
+    "description": "Đăng xuất khỏi hệ thống"
+  },
+  {
+    "time": "2026-11-17T15:29:16.415498",
+    "actor": "quanly",
+    "role": "admin",
+    "action": "login",
+    "detail": "Đăng nhập thành công",
+    "created_at": "2026-11-17T15:29:16.415498",
+    "username": "quanly",
+    "description": "Đăng nhập thành công"
+  },
+  {
+    "time": "2026-11-17T15:29:35.851094",
+    "actor": "quanly",
+    "role": "admin",
+    "action": "logout",
+    "detail": "Đăng xuất khỏi hệ thống",
+    "created_at": "2026-11-17T15:29:35.851094",
+    "username": "quanly",
+    "description": "Đăng xuất khỏi hệ thống"
+  },
+  {
+    "time": "2026-11-17T15:29:45.407667",
+    "actor": "hung",
+    "role": "user",
+    "action": "login",
+    "detail": "Đăng nhập thành công",
+    "created_at": "2026-11-17T15:29:45.407667",
+    "username": "hung",
+    "description": "Đăng nhập thành công"
+  },
+  {
+    "time": "2026-11-17T15:30:24.074376",
+    "actor": "hethong",
+    "role": "user",
+    "action": "shift_open",
+    "detail": "Mở ca trực S03, tiền đầu ca 0 đ",
+    "created_at": "2026-11-17T15:30:24.074376",
+    "username": "hethong",
+    "description": "Mở ca trực S03, tiền đầu ca 0 đ"
+  },
+  {
+    "time": "2026-11-17T15:30:24.078820",
+    "actor": "hung",
+    "role": "user",
+    "action": "vehicle_entry",
+    "detail": "Xe 78AH-123.34 (Xe máy) vào ô A2 - Mã vé: T-261117-POVW",
+    "created_at": "2026-11-17T15:30:24.078820",
+    "username": "hung",
+    "description": "Xe 78AH-123.34 (Xe máy) vào ô A2 - Mã vé: T-261117-POVW"
+  },
+  {
+    "time": "2026-11-17T15:30:32.408207",
+    "actor": "hung",
+    "role": "user",
+    "action": "logout",
+    "detail": "Đăng xuất khỏi hệ thống",
+    "created_at": "2026-11-17T15:30:32.408207",
+    "username": "hung",
     "description": "Đăng xuất khỏi hệ thống"
   }
 ]
