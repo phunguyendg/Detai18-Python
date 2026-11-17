@@ -25,21 +25,21 @@
       "slot_id": "A1",
       "status": "occupied",
       "current_plate": "59A1-12345",
-      "entry_time": "2026-10-22T14:21:06.273438",
+      "entry_time": "2026-11-17T06:15:00",
       "note": ""
     },
     {
       "slot_id": "A2",
       "status": "occupied",
       "current_plate": "51A-999.88",
-      "entry_time": "2026-10-22T14:51:06.273438",
+      "entry_time": "2026-11-17T06:45:00",
       "note": ""
     },
     {
       "slot_id": "A3",
-      "status": "empty",
-      "current_plate": "",
-      "entry_time": null,
+      "status": "occupied",
+      "current_plate": "51F-888.99",
+      "entry_time": "2026-11-17T07:10:00",
       "note": ""
     },
     {
@@ -95,14 +95,14 @@
       "slot_id": "B1",
       "status": "occupied",
       "current_plate": "78AH-123.34",
-      "entry_time": "2026-10-22T15:21:06.273438",
+      "entry_time": "2026-11-17T07:20:00",
       "note": ""
     },
     {
       "slot_id": "B2",
       "status": "occupied",
       "current_plate": "29B1-888.88",
-      "entry_time": "2026-10-22T13:56:06.273438",
+      "entry_time": "2026-11-17T05:50:00",
       "note": ""
     },
     {
@@ -164,11 +164,11 @@
   ],
   "tickets": [
     {
-      "ticket_id": "T-261022-CAR1",
+      "ticket_id": "T-261117-CAR1",
       "plate": "59A1-12345",
       "vehicle_type": "car",
       "slot_id": "A1",
-      "entry_time": "2026-10-22T14:21:06.273438",
+      "entry_time": "2026-11-17T06:15:00",
       "exit_time": null,
       "fee": 0,
       "status": "parked",
@@ -176,11 +176,11 @@
       "payment_id": ""
     },
     {
-      "ticket_id": "T-261022-CAR2",
+      "ticket_id": "T-261117-CAR2",
       "plate": "51A-999.88",
       "vehicle_type": "car",
       "slot_id": "A2",
-      "entry_time": "2026-10-22T14:51:06.273438",
+      "entry_time": "2026-11-17T06:45:00",
       "exit_time": null,
       "fee": 0,
       "status": "parked",
@@ -188,11 +188,11 @@
       "payment_id": ""
     },
     {
-      "ticket_id": "T-261022-MOTO1",
-      "plate": "78AH-123.34",
-      "vehicle_type": "motorbike",
-      "slot_id": "B1",
-      "entry_time": "2026-10-22T15:21:06.273438",
+      "ticket_id": "T-261117-CAR3",
+      "plate": "51F-888.99",
+      "vehicle_type": "car",
+      "slot_id": "A3",
+      "entry_time": "2026-11-17T07:10:00",
       "exit_time": null,
       "fee": 0,
       "status": "parked",
@@ -200,11 +200,23 @@
       "payment_id": ""
     },
     {
-      "ticket_id": "T-261022-MOTO2",
+      "ticket_id": "T-261117-MOTO1",
+      "plate": "78AH-123.34",
+      "vehicle_type": "motorbike",
+      "slot_id": "B1",
+      "entry_time": "2026-11-17T07:20:00",
+      "exit_time": null,
+      "fee": 0,
+      "status": "parked",
+      "is_monthly": true,
+      "payment_id": ""
+    },
+    {
+      "ticket_id": "T-261117-MOTO2",
       "plate": "29B1-888.88",
       "vehicle_type": "motorbike",
       "slot_id": "B2",
-      "entry_time": "2026-10-22T13:56:06.273438",
+      "entry_time": "2026-11-17T05:50:00",
       "exit_time": null,
       "fee": 0,
       "status": "parked",
@@ -212,16 +224,28 @@
       "payment_id": ""
     },
     {
-      "ticket_id": "T-261022-HIST1",
+      "ticket_id": "T-261117-HIST1",
       "plate": "30F-654.32",
       "vehicle_type": "car",
-      "slot_id": "A3",
-      "entry_time": "2026-10-22T12:06:06.273438",
-      "exit_time": "2026-10-22T13:06:06.273438",
-      "fee": 10000,
+      "slot_id": "A4",
+      "entry_time": "2026-11-17T04:00:00",
+      "exit_time": "2026-11-17T05:30:00",
+      "fee": 20000,
       "status": "closed",
       "is_monthly": false,
-      "payment_id": "PAY-261022-001"
+      "payment_id": "PAY-261117-001"
+    },
+    {
+      "ticket_id": "T-261116-HIST2",
+      "plate": "51A-999.88",
+      "vehicle_type": "car",
+      "slot_id": "A2",
+      "entry_time": "2026-11-16T15:00:00",
+      "exit_time": "2026-11-16T17:15:00",
+      "fee": 30000,
+      "status": "closed",
+      "is_monthly": false,
+      "payment_id": "PAY-261116-002"
     }
   ],
   "monthly_subscriptions": [
@@ -230,31 +254,100 @@
       "owner": "Trần Gia Hưng",
       "phone": "0392926544",
       "vehicle_type": "motorbike",
-      "start_date": "2026-10-17",
-      "end_date": "2026-11-16"
+      "start_date": "2026-11-01",
+      "end_date": "2026-12-01"
+    },
+    {
+      "plate": "51F-888.99",
+      "owner": "Nguyễn Thị Mai Anh",
+      "phone": "0934567890",
+      "vehicle_type": "car",
+      "start_date": "2026-10-20",
+      "end_date": "2026-11-20"
+    },
+    {
+      "plate": "59C1-456.78",
+      "owner": "Võ Thành Long",
+      "phone": "0582345678",
+      "vehicle_type": "motorbike",
+      "start_date": "2026-10-01",
+      "end_date": "2026-10-31"
     }
   ],
   "payments": [
     {
-      "payment_id": "PAY-261022-001",
-      "created_at": "2026-10-22T13:06:06.273438",
+      "payment_id": "PAY-261116-001",
+      "created_at": "2026-11-16T10:15:00",
+      "kind": "monthly",
+      "plate": "78AH-123.34",
+      "amount": 120000,
+      "method": "bank_transfer",
+      "reference_code": "VQR-261116-01",
+      "description": "Đăng ký vé tháng xe 78AH-123.34 (1 tháng)",
+      "cashier": "nhanvien",
+      "shift_id": "S01",
+      "received": 120000,
+      "change": 0
+    },
+    {
+      "payment_id": "PAY-261116-002",
+      "created_at": "2026-11-16T17:15:00",
+      "kind": "parking",
+      "plate": "51A-999.88",
+      "amount": 30000,
+      "method": "cash",
+      "reference_code": null,
+      "description": "Thu phí đỗ xe 51A-999.88",
+      "cashier": "nhanvien",
+      "shift_id": "S01",
+      "received": 50000,
+      "change": 20000
+    },
+    {
+      "payment_id": "PAY-261117-001",
+      "created_at": "2026-11-17T05:30:00",
       "kind": "parking",
       "plate": "30F-654.32",
-      "amount": 10000,
+      "amount": 20000,
       "method": "bank_transfer",
-      "reference_code": "VQR-TEST01",
+      "reference_code": "VQR-261117-01",
       "description": "Thu phí đỗ xe 30F-654.32",
       "cashier": "admin",
-      "shift_id": "S01",
-      "received": 10000,
+      "shift_id": "S02",
+      "received": 20000,
+      "change": 0
+    },
+    {
+      "payment_id": "PAY-261117-002",
+      "created_at": "2026-11-17T06:05:00",
+      "kind": "monthly",
+      "plate": "51F-888.99",
+      "amount": 1200000,
+      "method": "momo",
+      "reference_code": "MOMO-261117-01",
+      "description": "Gia hạn vé tháng ô tô 51F-888.99 (1 tháng)",
+      "cashier": "admin",
+      "shift_id": "S02",
+      "received": 1200000,
       "change": 0
     }
   ],
   "shifts": [
     {
       "shift_id": "S01",
+      "cashier": "nhanvien",
+      "opened_at": "2026-11-16T08:00:00",
+      "opening_cash": 500000,
+      "closed_at": "2026-11-16T18:00:00",
+      "counted_cash": 530000,
+      "expected_cash": 530000,
+      "difference": 0,
+      "note": "Ca mẫu ngày hôm trước đã chốt đối soát chuẩn"
+    },
+    {
+      "shift_id": "S02",
       "cashier": "admin",
-      "opened_at": "2026-10-22T13:06:06.273438",
+      "opened_at": "2026-11-17T05:00:00",
       "opening_cash": 500000,
       "closed_at": null,
       "counted_cash": null,
